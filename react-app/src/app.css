@@ -1,0 +1,19 @@
+#app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 300px;
+    overflow: auto;
+}
+
+#home-button {
+    float: left;
+    cursor: pointer;
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+#home-icon {
+    height: 30px;
+    width: 30px;
+}

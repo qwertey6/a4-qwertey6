@@ -1,13 +1,19 @@
 {
-  "name": "lh-4241-simple-node",
-  "version": "0.1.0",
-  "description": "WPI CS 4241 first assignment",
-  "author": "Jacob Kaplan",
+  "name": "a4-webapp",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "node server.js"
-  },
+  "main": "index.js",
   "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.6",
+    "request": "^2.88.0",
     "sqlite3": "^4.0.2"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "heroku-postbuild": "cd react-app && npm install && npm run build"
   }
 }

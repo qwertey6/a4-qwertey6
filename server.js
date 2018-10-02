@@ -15,9 +15,9 @@ let create_table = `CREATE TABLE IF NOT EXISTS 'mazes' (
 INSERT INTO 'mazes' (id,name,maze) VALUES (123, "ExampleMaze","WWWWWWWWWWWWWWWWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBW");`;
 
 db.run(create_table, (err, row) => {
-    if (err) {
-      throw err;
-    };
+  if (err) {
+    throw err;
+  };
 });
 
 let default_maze = "WWWWWWWWWWWWWWWWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBW";
@@ -37,9 +37,9 @@ function createMaze(res, name){
   let id = Math.floor((Math.random()*1412512)%10000);
   console.log(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${default_maze}")`);
   db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${default_maze}")`, [], (err) => {
-  if (err) {
-    throw err;
-  }});
+    if (err) {
+      throw err;
+    }});
   console.log(`A row has been inserted with rowid ${this.lastID}`);
   res.end(String(id));
 }
@@ -61,7 +61,7 @@ function getMaze(res, id){
       throw err;
     }
     res.end(JSON.stringify(row));
-})
+  })
 }
 //This is the function used to populate the menu page
 function sendMazes(res){
@@ -71,7 +71,7 @@ function sendMazes(res){
       throw err;
     }
     res.end(JSON.stringify(rows));
-})
+  })
 }
 
 var server = http.createServer (function (req, res) {
@@ -80,12 +80,12 @@ var server = http.createServer (function (req, res) {
   var query = url_parts.query;
 
   if(req.method == "DELETE"){
-    console.log(uri.pathname.slice(1,));
-    deleteMaze(uri.pathname.slice(1,));
+    console.log(uri.pathname.slice(1));
+    deleteMaze(uri.pathname.slice(1));
   }
   if(req.method == "PATCH" || req.method == "POST"){
-    console.log(uri.pathname.slice(1,));
-    updateMaze(uri.pathname.slice(1,), query.maze);
+    console.log(uri.pathname.slice(1));
+    updateMaze(uri.pathname.slice(1), query.maze);
   }
 
   switch( uri.pathname ) {
@@ -107,7 +107,7 @@ var server = http.createServer (function (req, res) {
     case '/MAZECRAZE.svg':
       sendFile(res, "MAZECRAZE.svg", "image/svg+xml");
       break;
-    
+
     case '/Mazes.json':
       sendMazes(res);
       break
