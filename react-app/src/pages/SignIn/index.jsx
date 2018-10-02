@@ -34,17 +34,17 @@ class Home extends React.Component {
         <input type="text" id="username" onChange={this.setUsername} placeholder="Enter a username here..." defaultValue={this.props.rootState.state.username}/>
         <h2>Choose your avatar</h2>
         <div id="avatars">
-          <img className={this.getAvatarClass("circle")} id="circle" onClick={() => this.setAvatar("circle")} src={require('../pictures/avatars/circle.png')} />
-          <img className={this.getAvatarClass("square")} id="square" onClick={() => this.setAvatar("square")} src={require('../pictures/avatars/square.png')} />
-          <img className={this.getAvatarClass("sun")} id="sun" onClick={() => this.setAvatar("sun")} src={require('../pictures/avatars/sun.png')} />
-          <img className={this.getAvatarClass("triangle")} id="triangle" onClick={() => this.setAvatar("triangle")} src={require('../pictures/avatars/triangle.png')} />
-          <img className={this.getAvatarClass("smile")} id="smile" onClick={() => this.setAvatar("smile")} src={require('../pictures/avatars/smile.png')} />
-          <img className={this.getAvatarClass("star")} id="star" onClick={() => this.setAvatar("star")} src={require('../pictures/avatars/star.png')} />
+          <img className={this.getAvatarClass("circle")} id="circle" onClick={() => this.setAvatar("circle")} src={require('../../pictures/avatars/circle.svg')} />
+          <img className={this.getAvatarClass("square")} id="square" onClick={() => this.setAvatar("square")} src={require('../../pictures/avatars/square.svg')} />
+          <img className={this.getAvatarClass("sun")} id="sun" onClick={() => this.setAvatar("sun")} src={require('../../pictures/avatars/sun.svg')} />
+          <img className={this.getAvatarClass("triangle")} id="triangle" onClick={() => this.setAvatar("triangle")} src={require('../../pictures/avatars/triangle.svg')} />
+          <img className={this.getAvatarClass("smile")} id="smile" onClick={() => this.setAvatar("smile")} src={require('../../pictures/avatars/smile.svg')} />
+          <img className={this.getAvatarClass("star")} id="star" onClick={() => this.setAvatar("star")} src={require('../../pictures/avatars/star.svg')} />
         </div>
         <h2>Choose your power ability</h2>
         <div id="power-ability">
-          <img className={this.getAbilityClass("dig")} id="dig" onClick={() => this.setAbility("dig")} src={require('../pictures/abilities/dig.png')} />
-          <img className={this.getAbilityClass("invisibility")} id="invisibility" onClick={() => this.setAbility("invisibility")} src={require('../pictures/abilities/invisibility.png')} />
+          <img className={this.getAbilityClass("dig")} id="dig" onClick={() => this.setAbility("dig")} src={require('../../pictures/abilities/dig.svg')} />
+          <img className={this.getAbilityClass("invisibility")} id="invisibility" onClick={() => this.setAbility("invisibility")} src={require('../../pictures/abilities/invisibility.svg')} />
         </div>
         {rootState.username != null && rootState.avatar != null && rootState.powerAbility != null
           ?

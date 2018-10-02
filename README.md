@@ -18,3 +18,11 @@ Assignment 3 - Full Stack: Basic Database-enabled Web Application using HTML/CSS
 - **Design Achievement 2**: Layout designed for mobile phones
 - **Design Achievement 3**: Render the board with softened edges using filters
 - **Design Achievement 4**: Multiple ways to interact with the board while editing. Added click and drag for convenience.
+
+
+
+
+Axios
+React
+Express
+Structured file system for both server and react-app

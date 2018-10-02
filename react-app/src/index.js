@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import SinglePlayer from "./SinglePlayer";
-import MultiPlayer from "./MultiPlayer";
-import MazeManager from "./MazeManager";
-import SignIn from './SignIn'
+import SinglePlayer from "./pages/SinglePlayer";
+import MultiPlayer from "./pages/MultiPlayer";
+import MazeManager from "./pages/MazeManager";
+import SignIn from './pages/SignIn'
 import './app.css'
 
 class App extends React.Component {

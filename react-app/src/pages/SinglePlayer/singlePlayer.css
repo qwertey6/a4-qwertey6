@@ -1,0 +1,24 @@
+#single-player {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#maze-selector {
+    width: 25%;
+    margin-left: 1%
+}
+
+#playable-maze {
+    width: 71%;
+    margin-left: 2%;
+    margin-right: 1%;
+}
+
+#mazes-to-play {
+    display: block;
+    max-height: 400px;
+    overflow: auto;
+    width: 150px;
+}

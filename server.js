@@ -1,13 +1,13 @@
-var http = require('http')
-  , fs   = require('fs')
-  , url  = require('url')
-  , port = 8080;
+const http = require('http');
+const fs   = require('fs');
+const url  = require('url');
+const port = 8080;
 
 const sqlite3 = require('sqlite3').verbose();
 
-let db = new sqlite3.Database('./Mazes.db');
+const db = new sqlite3.Database('./Mazes.db');
 
-let create_table = `CREATE TABLE IF NOT EXISTS 'mazes' (
+const create_table = `CREATE TABLE IF NOT EXISTS 'mazes' (
   id TEXT PRIMARY KEY,
   maze nchar(256),
   name nchar(256)
