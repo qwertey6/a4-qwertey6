@@ -6,13 +6,12 @@ class EditableMaze extends React.Component {
   }
 
   render() {
-    return (
-      // this.props.maze is the maze being edited. It was given to <EditableMaze /> by <MazeEditor />
-      (this.props.maze == null
-        ? <p>A Blank Maze SVG should go here for the user to create</p>
-        : <p>The maze for MazeID:{this.props.maze.id} ({this.props.maze.name}) should go here for the user to edit</p>
-      )
-    )
+    return <svg id={this.props.maze.id} className="EditableMaze" width="100%" height="100%" ></svg>
+  }
+  componentDidMount(){
+    let script = document.createElement('script');
+    script.src = require("./Maze.js");
+    document.getElementsByTagName('body')[0].appendChild(script);
   }
 }
 
