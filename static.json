@@ -1,0 +1,10 @@
+{
+  "root": "build/",
+  "clean_urls": false,
+  "routes": {
+    "/": "index.html",
+    "/maze-manager": "index.html",
+    "/single-player": "index.html",
+    "/multi-player": "index.html"
+  }
+}
