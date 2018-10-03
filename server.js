@@ -43,7 +43,7 @@ server.use('/multi-player', require('./server-routes/multi-player'));
 
 // Anything else, send the index.html
 server.get('*', (req,res) =>{
-  res.sendFile(path.join(__dirname + '/react-app/public/index.html'));
+  res.sendFile(path.join(__dirname + '/react-app/build/index.html'));
 });
 
 server.listen(process.env.PORT || port, () => {
