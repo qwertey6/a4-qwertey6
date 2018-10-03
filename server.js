@@ -1,4 +1,6 @@
-const server = require('express')();
+const express = require('express');
+const server = express();
+const path = require('path');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 const port = 8080;
@@ -6,6 +8,7 @@ const port = 8080;
 server.use(require('cors')());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
+server.use(express.static(path.join(__dirname, 'client/build')));
 
 // Log each request made to the server in the terminal
 server.use(function(req, res, next) {
