@@ -11,7 +11,7 @@ class EditableMaze extends React.Component {
     return <svg id={this.props.maze.id} className="EditableMaze" width="100%" height="100%" ></svg>
   }
 
-  componentDidMount(){
+  componentDidUpdate(){
     console.log("SCRIPT LOADED");
 
     //converts the board back into a server friendly string
@@ -92,7 +92,28 @@ class EditableMaze extends React.Component {
               .attr("x", (w*j) +"%")
               .attr("y", (h*i) +"%")
               .attr("class", tile)
-              .on("mouseover", handler)
+              .on("mouseover", function(d){
+                var mouse = d3.event;
+                console.log(mouse.buttons);
+                if (mouse.buttons>0) {
+                  if(d.state == "B"){
+                    d.state = "W";
+                    d3.select(this).attr("class", "W");
+                  }else{
+                    d.state = "B";
+                    d3.select(this).attr("class", "B");
+                  }
+                }
+              })
+              .on("click", function(d){
+                if(d.state == "B"){
+                  d.state = "W"
+                  d3.select(this).attr("class", "W");
+                }else{
+                  d.state = "B"
+                  d3.select(this).attr("class", "B")
+                }
+              })
         }
       }
     });
