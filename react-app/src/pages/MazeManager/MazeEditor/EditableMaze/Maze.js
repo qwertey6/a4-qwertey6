@@ -2,6 +2,7 @@ import * as d3 from "d3";
 console.log("SCRIPT LOADED");
 
 function getID() {//gets the "ID=___" part of the URL
+    return d3.select("svg").attr("id")
     var id;
     window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
         if(key=="ID"){id=value};
@@ -60,13 +61,12 @@ function MazeNavigationHandler(){
 	}
 }
 
-var width  = document.body.clientWidth;
-var height = document.body.clientHeight;
+var width  = 100;
+var height = 100;
 
-var menu = d3.select("svg");
+//M var menu = d3.select("svg");
 
-var board = d3.select("#EditableMaze").append("g").attr("class","board");
-console.log(d3.select("svg").nodes())
+var board = d3.select("svg").append("g").attr("class","board");
 var handler = MazeNavigationHandler();//set 1 handler to handle all mouse over events
 
 var xhr = new XMLHttpRequest();
@@ -83,17 +83,17 @@ xhr.addEventListener("load", function(){
 
 			board.append("rect")
 				.data([{x:j, y:i, state:tile}])
-				.attr("width", w)
-				.attr("height", h)
-				.attr("x", w*j)
-				.attr("y", h*i)
+				.attr("width", w+"%")
+				.attr("height", h+"%")
+				.attr("x", (w*j) +"%")
+				.attr("y", (h*i) +"%")
 				.attr("class", tile)
 				.on("mouseover", handler)
 		}
 		//board.transform()
 	}
 });
-xhr.open("GET", "/getMaze?id="+getID());//ask to GET a new maze (we are asking the server to create a new ID for us, which on load, we will go to the "play/edit" page for.)
+xhr.open("GET", "/mazes/"+getID());//ask to GET a new maze (we are asking the server to create a new ID for us, which on load, we will go to the "play/edit" page for.)
 //NOTE: WE ONLY SEND THE XHR REQUEST AFTER LOADING THE SVG GRAPHIC BELOW!
 
 /*
@@ -108,25 +108,26 @@ d3.xml("MAZECRAZE.svg").mimeType("image/svg+xml").get(function(error, xml) {
 	board.attr("transform","translate(10,"+menu.node().clientHeight/3+")")
 });
 */
-
+/*
 function makeControlBox(){
 	let ypad = height*0.02;//let our y-margin be 2% of the height
 	let mheight = height*0.10;
 	let index = 1;
 	return "<rect class='ControlBox' "+
-	" width="+(width-20)+
+	" width="+(width-20)++
 	" height="+(mheight)+
 	" x=10 y="+(mheight*index + ypad*index)+
 	" stroke=black fill=none />"+
-	" <text class='Edit Play' x="+(10)+" y=" + (mheight*index + ypad*index + (mheight+ypad)/2) + " font-family='Verdana' font-size="+(mheight/2)+" fill=blue>Edit</text>"+
-	" <text class='Save' x="+((width-10)-3*(mheight/2))+" y=" + (mheight*index + ypad*index + (mheight+ypad)/2) + " font-family='Verdana' font-size="+(mheight/2)+" fill=blue>Save</text>";
+	" <text class='Edit Play' x="+(10)+" y=" + (mheight*index + ypad*index + (mheight+ypad)/2)+"%" + " font-family='Verdana' font-size="+(mheight/2)+" fill=blue>Edit</text>"+
+	" <text class='Save' x="+((width-10)-3*(mheight/2))+" y=" + (mheight*index + ypad*index + (mheight+ypad)/2)+"%" + " font-family='Verdana' font-size="+(mheight/2)+" fill=blue>Save</text>";
 }
-
+*/
 
 //Create the controls box. I used illustrator to quickly whip it up
-var controls = menu.append("g").html(makeControlBox());
+//var controls = menu.append("g").html(makeControlBox());
 
 //add the controls for Editing and Saving
+/*
 controls.select(".Save")
 	.on("click", function(d){//if a user clicks on the save button, then
 		var xhr = new XMLHttpRequest();
@@ -137,9 +138,9 @@ controls.select(".Save")
 		}
 		xhr.send();
 	});
-
+*/
 var GAMESTATE = "PLAY"
-
+/*
 controls.select(".Play").on("click", function(){
 	if(GAMESTATE == "PLAY"){
 		board.selectAll("rect")
@@ -182,3 +183,4 @@ controls.select(".Play").on("click", function(){
 
 });
 
+*/
