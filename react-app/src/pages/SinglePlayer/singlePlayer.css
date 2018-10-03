@@ -2,23 +2,31 @@
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
 }
 
 #maze-selector {
-    width: 25%;
-    margin-left: 1%
+    margin-left: 1%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #playable-maze {
-    width: 71%;
-    margin-left: 2%;
-    margin-right: 1%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #mazes-to-play {
-    display: block;
-    max-height: 400px;
+    width: 100%;
+    display: flex;
     overflow: auto;
-    width: 150px;
+}
+
+.aaa {
+    border: 3px solid black;
 }

@@ -5,41 +5,44 @@ import EditableMaze from "./EditableMaze/index";
 class MazeEditor extends React.Component {
   constructor(props){
     super(props);
-    this.saveEditableMaze = this.saveEditableMaze.bind(this)
+    this.saveEditableMaze = this.saveEditableMaze.bind(this);
+    this.deleteMaze = this.deleteMaze.bind(this)
   }
 
   render() {
-    if (this.props.maze == null){
-      // The user is creating a new maze
-      return (
-        <div id="maze-creator">
-          <h2>Create A New Maze</h2>
-          <input type="text" id="new-maze-name" placeholder="Enter the name of your maze here..." />
-          <EditableMaze />
-          <button onClick={this.saveEditableMaze}>Save Maze</button>
+    return (
+      <div id="maze-creator">
+        <h2>Edit {this.props.maze.name}</h2>
+        <EditableMaze maze={this.props.maze}/>
+        <div id="edit-maze-buttons">
+          <button onClick={this.saveEditableMaze} className="green">Save Maze</button>
+          <button onClick={this.deleteMaze} className="red">Delete Maze</button>
         </div>
-      )
-    } else {
-      //The user is editing a maze
-      return (
-        <div id="maze-creator">
-          <h2>Editing {this.props.maze.name}</h2>
-          <EditableMaze maze={this.props.maze}/>
-          <button onClick={this.saveEditableMaze}>Save Maze</button>
-        </div>
-      )
-    }
+      </div>
+    )
   }
 
   saveEditableMaze() {
-    //TODO: Get the edited maze from <EditableMaze />
-    const maze = this.props.maze; // For now it will just be set to the original
-    //TODO: Make sure the maze has a name, and a start and end?
-    axios.post('/maze', maze)
+    let requestBody = {
+      maze: this.props.maze //TODO: Get the edited maze from <EditableMaze /> instead of the original
+    };
+
+    //TODO: Make sure the maze has a start and end?
+    axios.put(`/mazes/${this.props.maze.id}`, requestBody)
       .then(() => {
-        console.log(`Successfully saved the maze ${maze.id}`)
+        console.log(`Successfully saved the maze ${this.props.maze.id}`)
       }).catch(e => {
         console.log("ERROR", e);
+    })
+  }
+
+  deleteMaze() {
+    const _this = this;
+    axios.delete(`/mazes/${_this.props.maze.id}`)
+      .then(res => {
+        _this.props.parentThis.loadAllMazes()
+      }).catch(e => {
+        console.log("ERROR", e)
     })
   }
 }
