@@ -8,7 +8,6 @@ const port = 8080;
 server.use(require('cors')());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
-server.use(express.static(path.join(__dirname, 'client/build')));
 
 // Log each request made to the server in the terminal
 server.use(function(req, res, next) {
@@ -41,8 +40,9 @@ db.run(create_table, (err, row) => {
 server.use('/mazes', require('./server-routes/mazes'));
 server.use('/multi-player', require('./server-routes/multi-player'));
 
-server.get('/*', (req,res) =>{
-  res.sendFile(path.join(__dirname + '/react-app/public/index.html'));
+// Anything else, send the index.html
+server.get('*', (req,res) =>{
+  res.sendFile(path.join('../react-app/public/index.html'));
 });
 
 server.listen(process.env.PORT || port, () => {
