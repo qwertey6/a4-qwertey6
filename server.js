@@ -38,6 +38,10 @@ db.run(create_table, (err, row) => {
 server.use('/mazes', require('./server-routes/mazes'));
 server.use('/multi-player', require('./server-routes/multi-player'));
 
+server.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname + '/react-app/public/index.html'));
+});
+
 server.listen(process.env.PORT || port, () => {
   console.log(`listening on ${process.env.PORT || port}`);
 });
