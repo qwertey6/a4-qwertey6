@@ -1,10 +1,24 @@
-Assignment 3 - Full Stack: Basic Database-enabled Web Application using HTML/CSS/JS and Node.js  
+## JQ | GAME | MazeCraze
+`Jake Kaplan`
+`Quinn Averill`
 
-## Jacob Kaplan | MaZe CrAzE (crazy-case optional)
-    MAZE CRAZE is an online game where you can play, edit, and delete mazes which other players create!
-    I decided to mostly recreate the 6 person group project which was assigned to me for
-     software engineering... as a webware project... on my own! I learned that I should not do this.
+Include a brief summary of your project here.
+Images are encouraged, along with concise, high-level text.
 
+## Technical Achievements
+- **Tech Achievement 1**: Shown in the react-app directory, the webapp uses React running on it's own server to 
+                          serve pages to the browser instead of the node server.
+- **Tech Achievement 2**: The Node server uses the module express to route each endpoint according to it's request method 
+- **Tech Achievement 3**: The react app uses the module axios to make easy HTTP requests to the server instead of using xhr
+
+### Design/Evaluation Achievements
+- **Design Achievement 1**: The React app uses the React-Router module to route pages correctly, allowing the user of
+                            the browser's back button and easy navigation throughout the app
+- **Design Achievement 2**: The Node server uses a structured file system to organize the endpoints
+- **Design Achievement 3**: The Node server has a logging method that logs each endpoint to the console
+
+
+OLD ACIEVEMENTWS FROM PROJECT 3
 ## Technical Achievements
 - **Tech Achievement 1**: Using SQLite3 on Heroku (do not do this)
 - **Tech Achievement 2**: Everything is made with D3, except for (most) of the XMLHttpRequests.
@@ -18,11 +32,3 @@ Assignment 3 - Full Stack: Basic Database-enabled Web Application using HTML/CSS
 - **Design Achievement 2**: Layout designed for mobile phones
 - **Design Achievement 3**: Render the board with softened edges using filters
 - **Design Achievement 4**: Multiple ways to interact with the board while editing. Added click and drag for convenience.
-
-
-
-
-Axios
-React
-Express
-Structured file system for both server and react-app

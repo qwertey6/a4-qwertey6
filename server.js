@@ -39,7 +39,6 @@ db.run(create_table, (err, row) => {
 
 // Routes in the ./server-routes directory
 server.use('/mazes', require('./server-routes/mazes'));
-server.use('/multi-player', require('./server-routes/multi-player'));
 
 // Anything else, send the index.html
 server.get('*', (req,res) =>{
