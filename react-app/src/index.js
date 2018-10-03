@@ -14,10 +14,16 @@ class App extends React.Component {
       username: null,
       avatar: null,
       powerAbility: null,
+      userID: Date.now().toString(36)
     }
   }
 
   render() {
+    const player = {
+      username: this.state.username,
+      avatar: this.state.avatar,
+      powerAbility: this.state.powerAbility
+    };
     return (
       <Router>
         <div id="app">
@@ -27,7 +33,7 @@ class App extends React.Component {
             <Route exact path="/" render={(props) => <SignIn {...props} rootState={this} />} />
             <Route path="/maze-manager" component={MazeManager} />
             <Route path="/single-player" component={SinglePlayer} />
-            <Route path="/multi-player" component={MultiPlayer} />
+            <Route path="/multi-player" render={(props) => <MultiPlayer {...props} player={player} />} />
           </Switch>
         </div>
       </Router>

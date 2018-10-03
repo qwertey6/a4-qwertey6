@@ -1,16 +1,20 @@
 import React from 'react'
+import axios from 'axios'
+
 class MultiPlayer extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      game: null
+    }
   }
-
 
   render() {
     return (
       <div id="multiplayer">
-        <h2>Multiplayer</h2>
+        <p>Multiplayer</p>
       </div>
-    );
+    )
   }
 }
 

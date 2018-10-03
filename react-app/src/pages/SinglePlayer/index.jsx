@@ -11,12 +11,12 @@ class SinglePlayer extends React.Component {
       mazes: [],
       selectedMazeToPlay: null
     };
-    this.playMaze = this.playMaze.bind(this)
+    this.playMaze = this.playMaze.bind(this);
   }
 
   componentWillMount() {
     const _this = this;
-    axios.get('/Mazes.json')
+    axios.get('/mazes')
       .then(res => {
         _this.setState({
           mazes: res.data,
@@ -28,7 +28,13 @@ class SinglePlayer extends React.Component {
   displayMazes() {
     let mazeButtons = [];
     this.state.mazes.forEach( maze => {
-      mazeButtons.push(<tr onClick={() => this.playMaze(maze)}><td>{maze.name}</td></tr>)
+      mazeButtons.push(
+        <button key={maze.id}
+            onClick={() => this.playMaze(maze)}
+            className={this.state.selectedMazeToPlay.id === maze.id ? "selected" : null}
+        >{maze.name}
+        </button>
+      )
     });
     return mazeButtons
   }
@@ -38,9 +44,9 @@ class SinglePlayer extends React.Component {
       <div id="single-player">
         <div id="maze-selector">
           <h2>Select a maze to Play:</h2>
-          <table id="mazes-to-play">
+          <div id="mazes-to-play">
             {this.displayMazes()}
-          </table>
+          </div>
         </div>
         <div id="playable-maze">
           {this.state.selectedMazeToPlay != null
