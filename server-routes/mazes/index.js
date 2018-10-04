@@ -9,6 +9,7 @@ function random() {
     return x - Math.floor(x);
 }*/
     /****************MAZE GENERATION*********************/
+  function makeMaze(){
   var moves = [
     [ 0,  1],
     [ 0, -1],
@@ -18,7 +19,7 @@ function random() {
   var height = 16;
   var mazeArray = [];
   var visited = {};//a hash of strings
-  var rand = function(seed){return Math.floor(Math.random()*16*seed)%4};
+  var rand = function(){return Math.floor(Math.random()*16)%4};
 
   function pointHash(x, y){
     return x + ":" + y;
@@ -26,9 +27,9 @@ function random() {
   function visitPoint(x, y){
     visited[pointHash(x,y)] = 1;
   }
-  function recurse(x, y, seed){
+  function recurse(x, y){
     visitPoint(x, y);
-    let start = rand(seed);
+    let start = rand();
     for(let z=0; z < 4; z++) {
       let delta = moves[(start+z)%4];
       let x2 = x + delta[0];
@@ -37,24 +38,26 @@ function random() {
       let nextX = x + delta[0]*2;
       let nextY = y + delta[1]*2;
 
-      if( nextY < height && nextX < width && nextX >= 0 && nextY >= 0 && !visited[pointHash(nextX, nextY)]) {
+      if( nextY-1 < height && nextX-1 < width && nextX >= 0 && nextY >= 0 && !visited[pointHash(nextX, nextY)]) {
         mazeArray[nextX][nextY] = "W";
         mazeArray[x2][y2] = "W";
-        recurse(nextX, nextY, seed);
+        recurse(nextX, nextY);
       }
     }
   }
-  function generateMaze(seed){
+  function generateMaze(){
     for(let x=0; x<width; x++){
       mazeArray.push([]);
       for (let y=0; y<height; y++) {
         mazeArray[mazeArray.length-1].push("B");
       }
     }
-    recurse(Math.floor(width/2), 0, seed);
+    recurse(Math.floor(width/2), 0);
     mazeArray[Math.floor(width/2)][0] = "W"; 
     return [].concat.apply([], mazeArray).join("");
   }
+return generateMaze();
+}
 /****************END MAZE GENERATION*********************/
 
 // Output: A list of mazes if successful, 400 else
@@ -91,7 +94,7 @@ routes.post('/', function(req, res) {
   if (name == null) {
     res.status(400).end("Missing name in body")
   }
-  db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${generateMaze(id)}")`, [], (err) => {
+  db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${makeMaze()}")`, [], (err) => {
     if (err) {
       console.log(err);
       res.status(400).end()
