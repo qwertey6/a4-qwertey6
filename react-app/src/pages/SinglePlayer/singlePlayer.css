@@ -9,6 +9,8 @@
 #maze-selector {
     margin-left: 1%;
     width: 80%;
+    height: 25%;
+    min-height: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,6 +18,8 @@
 
 #playable-maze {
     width: 80%;
+    height: 70%;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
