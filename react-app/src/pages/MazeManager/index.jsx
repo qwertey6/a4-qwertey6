@@ -58,7 +58,7 @@ class MazeManager extends React.Component {
           </table>
         </div>
         {this.state.selectedMazeToEdit != null
-          ? <MazeEditor maze={this.state.selectedMazeToEdit} parentThis={this}/>
+          ? <MazeEditor maze={this.state.selectedMazeToEdit} parentThis={this} numberOfMazes={this.state.mazes.length}/>
           : null
         }
       </div>

@@ -68,6 +68,10 @@ class MazeEditor extends React.Component {
   }
 
   deleteMaze() {
+    if (this.props.numberOfMazes === 1){
+      alert("Sorry, you cannot delete the last maze");
+      return;
+    }
     const _this = this;
     axios.delete(`/mazes/${_this.props.maze.id}`)
       .then(res => {
