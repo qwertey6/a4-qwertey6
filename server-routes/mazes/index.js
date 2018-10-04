@@ -52,8 +52,11 @@ function random() {
         mazeArray[mazeArray.length-1].push("B");
       }
     }
-    recurse(Math.floor(width/2), 0);
-    mazeArray[Math.floor(width/2)][0] = "W"; 
+    //recurse(0, 0);
+    recurse(width-8,height-8);
+    mazeArray[width-8][height-8] = "W";
+    mazeArray[width-1][height-1] = "W";
+    mazeArray[width-1][height-2] = "W"; 
     return [].concat.apply([], mazeArray).join("");
   }
 return generateMaze();

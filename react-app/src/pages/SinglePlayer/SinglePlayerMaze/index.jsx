@@ -23,9 +23,47 @@ class SinglePlayerMaze extends React.Component {
   playableMazeScript(){
     console.log("SCRIPT LOADED");
 
+    /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
+    */
+
+    /* An ability's type is one of:
+    	dig
+    	*slime
+    	*stun
+    	*...
+    	*...
+    	or null
+    */
+    function abilityHandler(player){
+    	if(player.use_ability == false){return;}// if this player has not used their ability, exit the function
+    	player.use_ability = false;//mark that we have used up this player's ability for this "turn"
+    	switch(player.ability){//switch onto the right ability if the player has used an ability
+    		case "dig":
+    			var digTile = board.selectAll("rect").filter(function(d){return d.x == player.x+player.dx  && d.y == player.y+player.dy});//select the element at 0,0
+    			if(digTile.node() == [] && !("B" in digTile.attr("class"))){return;}//if we have not selected any tile, then the player is likely trying to dig out of the maze, so exit
+    			let updated_digTileDatum = digTile.datum();
+    			updated_digTileDatum.health -= 0.31;
+    			if(updated_digTileDatum.health <= 0.1){
+    				digTile.attr("opacity", 1)
+    						.attr("class", digTile.attr("class").replace("B", "W"));
+    						return;
+    			}
+    			digTile.datum(updated_digTileDatum);//update the data of the dug tile to reflect the reduced health
+    			digTile.attr("opacity", function(d){return d.health;});
+    			break;
+    		case "slime":
+    			// TODO : Implement the slime ability
+    			break;
+    		case "stun":
+    			// TODO : Implement the stun ability
+    			break;
+    	}
+    }
 
     // the icon should be the node of the <g> of the shape.
-    var player = {trail:[], icon:null, x:0, y:0, ability:null};
+    // dx/dy is the direction the player is moving in. This is used to figure out how to update x/y, or which direction to use the ability in (for dig)
+    //update is set to 1 whenever the player performs an action, and set to 0 at the end of the action. This is used for multiplayer event handling
+    var player = {trail:[], icon:null, x:0, y:0, ability:null, use_ability:false, dx:0, dy:0, update:0};
     //converts the board back into a server friendly string
     var alltiles = [];
     function getBoardState(){
@@ -67,7 +105,7 @@ class SinglePlayerMaze extends React.Component {
 			d3player.transition()
 					.attr("cx", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
 					.attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
-					.duration(500);
+					.duration(200);
             prevtile.attr("class", prevtile.attr("class").replace("F","W"));
             //then move our player into the tile
 
@@ -82,7 +120,7 @@ class SinglePlayerMaze extends React.Component {
             d3player.transition()
 					.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
 					.attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
-					.duration(500);
+					.duration(200);
             if(curtile.datum().x == 15 && curtile.datum().y == 15){
               alert("Winrar is you!")
             }
@@ -117,7 +155,7 @@ class SinglePlayerMaze extends React.Component {
             var tile = data.maze[16*i + j];
 
             board.append("rect")
-              .data([{x:j, y:i, state:tile}])
+              .data([{x:j, y:i, state:tile, health:1, slimed:false}])
               .attr("width", w+"%")
               .attr("height", h+"%")
               .attr("x", (w*j) +"%")
@@ -131,6 +169,7 @@ class SinglePlayerMaze extends React.Component {
     d3.select("body")
     	.on("keydown", function() {
 			let key = d3.event.keyCode;
+			console.log(key);
 			/*
 			37 - left
 			38 - up
