@@ -1,6 +1,61 @@
 const routes = require('express').Router();
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./Mazes.db');
+/*
+var seed = 1;
+function random() {
+    seed += 1;
+    let x = Math.abs(Math.sin(seed++) * 10000);
+    return x - Math.floor(x);
+}*/
+    /****************MAZE GENERATION*********************/
+  var moves = [
+    [ 0,  1],
+    [ 0, -1],
+    [ 1,  0],
+    [-1,  0]];
+  var width = 16;
+  var height = 16;
+  var mazeArray = [];
+  var visited = {};//a hash of strings
+  var rand = function(seed){return Math.floor(Math.random()*16*seed)%4};
+
+  function pointHash(x, y){
+    return x + ":" + y;
+  }
+  function visitPoint(x, y){
+    visited[pointHash(x,y)] = 1;
+  }
+  function recurse(x, y, seed){
+    visitPoint(x, y);
+    let start = rand(seed);
+    for(let z=0; z < 4; z++) {
+      let delta = moves[(start+z)%4];
+      let x2 = x + delta[0];
+      let y2 = y + delta[1];
+      
+      let nextX = x + delta[0]*2;
+      let nextY = y + delta[1]*2;
+
+      if( nextY < height && nextX < width && nextX >= 0 && nextY >= 0 && !visited[pointHash(nextX, nextY)]) {
+        mazeArray[nextX][nextY] = "W";
+        mazeArray[x2][y2] = "W";
+        recurse(nextX, nextY, seed);
+      }
+    }
+  }
+  function generateMaze(seed){
+    for(let x=0; x<width; x++){
+      mazeArray.push([]);
+      for (let y=0; y<height; y++) {
+        mazeArray[mazeArray.length-1].push("B");
+      }
+    }
+    recurse(Math.floor(width/2), 0, seed);
+    mazeArray[Math.floor(width/2)][0] = "W"; 
+    return [].concat.apply([], mazeArray).join("");
+  }
+/****************END MAZE GENERATION*********************/
 
 // Output: A list of mazes if successful, 400 else
 routes.get('/', function(req, res) {
@@ -36,8 +91,7 @@ routes.post('/', function(req, res) {
   if (name == null) {
     res.status(400).end("Missing name in body")
   }
-  const default_maze = "WWWWWWWWWWWWWWWWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBWBBBBBBBBBBBBBBBW";
-  db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${default_maze}")`, [], (err) => {
+  db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${generateMaze(id)}")`, [], (err) => {
     if (err) {
       console.log(err);
       res.status(400).end()

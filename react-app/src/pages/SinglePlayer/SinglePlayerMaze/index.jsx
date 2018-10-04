@@ -15,6 +15,7 @@ class SinglePlayerMaze extends React.Component {
   componentDidUpdate(){
     console.log("SCRIPT LOADED");
 
+
     // the icon should be the node of the <g> of the shape.
     var player = {trail:[], icon:null, x:0, y:0, ability:null};
     //converts the board back into a server friendly string
