@@ -87,8 +87,8 @@ class EditableMaze extends React.Component {
       .then(res => {
         console.log(res.data);
         var data = res.data;
-        var h = height*0.5/16;//tile height
-        var w = h
+        var h = height/16;//tile height
+        var w = width/16;
 
 
         for(var i=0; i<16; i++){//load columns
