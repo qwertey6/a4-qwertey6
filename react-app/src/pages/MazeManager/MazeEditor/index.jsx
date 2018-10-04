@@ -37,7 +37,7 @@ class MazeEditor extends React.Component {
       .then(res => {
         axios.get(`/mazes/${res.data.id}`)
           .then(res => {
-            _this.loadAllMazes(res.data);
+            _this.props.parentThis.loadAllMazes();
           }).catch(e => {
           console.log("ERROR", e)
         })
