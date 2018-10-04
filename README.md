@@ -5,6 +5,20 @@
 Include a brief summary of your project here.
 Images are encouraged, along with concise, high-level text.
 
+## How to play
+First, create a username, and choose an avatar and an ability (currently the avatar and ability don't change the
+game, but they will in the next iteration)
+
+Then, you will be able to choose 3 options: Edit/Create Mazes, Singleplayer, and Multiplayer (multiplayer will be
+introduced in the next iteration).
+
+In Edit/Create Mazes, you will be able to create a new randomly generated maze, or create your own with the mouse.
+You can also delete a maze, but you cannot delete the last maze! When creating a new maze, the randomly generated 
+maze may not be solve-able, so make sure to edit it before playing it!
+
+In Singleplayer mode, you can play the maze by yourself by tracing your mouse through the maze. Start is the top left
+corner of the maze, and the end is the bottom right corner!
+
 ## Technical Achievements
 - **Tech Achievement 1**: Shown in the react-app directory, the webapp uses React running on it's own server to 
                           serve pages to the browser instead of the node server.

@@ -12,7 +12,15 @@ class SinglePlayerMaze extends React.Component {
     return <svg id={this.props.maze.id} className="PlayableMaze" width="100%" height="100%" ></svg>
   }
 
+  componentDidMount() {
+    this.playableMazeScript()
+  }
+
   componentDidUpdate(){
+    this.playableMazeScript()
+  }
+
+  playableMazeScript(){
     console.log("SCRIPT LOADED");
 
 
