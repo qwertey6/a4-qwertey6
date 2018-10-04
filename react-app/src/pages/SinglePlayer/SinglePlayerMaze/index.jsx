@@ -17,10 +17,6 @@ class SinglePlayerMaze extends React.Component {
 
     // the icon should be the node of the <g> of the shape.
     var player = {trail:[], icon:null, x:0, y:0, ability:null};
-    var d3player = d3.select("svg").append("g");
-    d3player.append("circle")
-    		.attr("fill","red")
-    		.attr("r",10);
     //converts the board back into a server friendly string
     var alltiles = [];
     function getBoardState(){
@@ -28,12 +24,15 @@ class SinglePlayerMaze extends React.Component {
       return  alltiles.map(function(d){return d.className.baseVal.includes("B")})
           .map(function(d){return d ? "B" : "W";}).join("");
     }
+    function randbetween(lower, upper){
+    	console.log(lower + (Math.random()*(upper-lower)))
+    	return lower + (Math.random()*(upper-lower));
+    }
 
     var tilehistory = [];// a list of recently visited tiles
 
     //Tile states: B=unnavigable W=navigable F=already navigated
     function MazeNavigationHandler(){
-      
       return function(){
         if(tilehistory[0] == undefined){
           var firstTile = board.selectAll("rect").filter(function(d){return d.x+d.y ==0});//select the element at 0,0
@@ -55,6 +54,11 @@ class SinglePlayerMaze extends React.Component {
           
           //If we are moving back a tile, unmark/unnavigate the previous tile
           if (curtile.attr("class") == "F"){
+          	console.log(curtile.datum())
+			d3player.transition()
+					.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
+					.attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
+					.duration(500);
             prevtile.attr("class", prevtile.attr("class").replace("F","W"));
             //then move our player into the tile
 
@@ -66,6 +70,10 @@ class SinglePlayerMaze extends React.Component {
           if (curtile.attr("class") == "W"){
             curtile.attr("class", curtile.attr("class").replace("W","F"));
             tilehistory.push(curtile);//add the current tile to the top of our tile history
+            d3player.transition()
+					.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
+					.attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
+					.duration(500);
             if(curtile.datum().x == 15 && curtile.datum().y == 15){
               alert("Winrar is you!")
             }
@@ -76,18 +84,23 @@ class SinglePlayerMaze extends React.Component {
 
     var width  = 100;
     var height = 100;
+	var h = height/16;//tile height
+	var w = h
 
     //M var menu = d3.select("svg");
 
     var board = d3.select("svg").append("g").attr("class","board");
     var handler = MazeNavigationHandler();//set 1 handler to handle all mouse over events
+    var d3player = d3.select("svg").append("circle"); //we append the player here, so that the player is always above the board
+    d3player.attr("fill", "red")
+    		.attr("r", width/16/2)
+    		.attr("cx", w/2+"%")
+    		.attr("cy", h/2+"%");
 
     axios.get('/mazes/'+this.props.maze.id)
       .then(res => {
         console.log(res.data);
         var data = res.data;
-        var h = height*0.5/16;//tile height
-        var w = h
 
 
         for(var i=0; i<16; i++){//load columns
@@ -125,6 +138,7 @@ class SinglePlayerMaze extends React.Component {
 				case 40:
 					break;
     		}
-	}
+	})
+}
 }
 export default SinglePlayerMaze
