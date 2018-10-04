@@ -2,8 +2,8 @@
 `Jake Kaplan`
 `Quinn Averill`
 
-Include a brief summary of your project here.
-Images are encouraged, along with concise, high-level text.
+MAZE CRAZE is an online game where you can play, edit, and delete mazes which other players create!
+Available at https://a4-jq.herokuapp.com/
 
 ## How to play
 First, create a username, and choose an avatar and an ability (currently the avatar and ability don't change the
@@ -24,6 +24,7 @@ corner of the maze, and the end is the bottom right corner!
                           serve pages to the browser instead of the node server.
 - **Tech Achievement 2**: The Node server uses the module express to route each endpoint according to it's request method 
 - **Tech Achievement 3**: The react app uses the module axios to make easy HTTP requests to the server instead of using xhr
+- **Tech Achievement 4**: The react app delivers d3 to the front end, which handles all of the in-board interactions/
 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: The React app uses the React-Router module to route pages correctly, allowing the user of
@@ -33,7 +34,7 @@ corner of the maze, and the end is the bottom right corner!
 - **Design Achievement 4**: Added a Favicon to distinguish our app from every other open tab in your browser
 
 
-OLD ACIEVEMENTWS FROM PROJECT 3
+OLD ACIEVEMENTWS FROM PROJECT 3 (note most don't apply anymore, as we have massively changed the codebase/approaches)
 ## Technical Achievements
 - **Tech Achievement 1**: Using SQLite3 on Heroku (do not do this)
 - **Tech Achievement 2**: Everything is made with D3, except for (most) of the XMLHttpRequests.
