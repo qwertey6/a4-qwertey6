@@ -9,3 +9,8 @@
 .W {
     fill: #dddddd;
 }
+
+#editable-maze-svg{
+    width: 100%;
+    height: 60%;
+}

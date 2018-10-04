@@ -9,10 +9,18 @@ class EditableMaze extends React.Component {
   }
 
   render() {
-    return <svg id={this.props.maze.id} className="EditableMaze" width="100%" height="100%" ></svg>
+    return <svg id="editable-maze-svg" className="EditableMaze" ></svg>
+  }
+
+  componentDidMount() {
+    this.editableMazeScript()
   }
 
   componentDidUpdate(){
+    this.editableMazeScript()
+  }
+
+  editableMazeScript() {
     console.log("SCRIPT LOADED");
 
     //converts the board back into a server friendly string
@@ -20,14 +28,14 @@ class EditableMaze extends React.Component {
       var alltiles = [];
       board.selectAll("rect").each(function(d){alltiles[d.x + d.y*16] = this})
       return  alltiles.map(function(d){return d.className.baseVal.includes("B")})
-          .map(function(d){return d ? "B" : "W";}).join("");
+        .map(function(d){return d ? "B" : "W";}).join("");
     }
 
     var tilehistory = [];// a list of recently visited tiles
 
     //Tile states: B=unnavigable W=navigable F=already navigated
     function MazeNavigationHandler(){
-      
+
       return function(){
         if(tilehistory[0] == undefined){
           var firstTile = board.selectAll("rect").filter(function(d){return d.x+d.y ==0});//select the element at 0,0
@@ -39,14 +47,14 @@ class EditableMaze extends React.Component {
         var prevtile =tilehistory[tilehistory.length-1];
         //only proceed if the currently moused over tile is adjacent to the previously selected tile:
         if  (((curtile.datum().x == prevtile.datum().x-1) && (curtile.datum().y == prevtile.datum().y  )) ||
-           ((curtile.datum().x == prevtile.datum().x+1) && (curtile.datum().y == prevtile.datum().y  )) ||
-           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y+1)) ||
-           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y-1))){
-          
+          ((curtile.datum().x == prevtile.datum().x+1) && (curtile.datum().y == prevtile.datum().y  )) ||
+          ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y+1)) ||
+          ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y-1))){
+
           console.log(curtile);
           //Do not do anything if the current tile's state is unnavigable
           if (curtile.attr("class") == "B"){return;}
-          
+
           //If we are moving back a tile, unmark/unnavigate the previous tile
           if (curtile.attr("class") == "F"){
             prevtile.attr("class", prevtile.attr("class").replace("F","W"));
@@ -115,9 +123,9 @@ class EditableMaze extends React.Component {
                   d3.select(this).attr("class", "B")
                 }
               })
+          }
         }
-      }
-    });
+      });
   }
 }
 

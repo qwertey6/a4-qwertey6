@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
     font: 14px/19px  "Helvetica", "Arial", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
