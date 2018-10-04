@@ -56,7 +56,7 @@ class SinglePlayerMaze extends React.Component {
           if (curtile.attr("class") == "F"){
           	console.log(curtile.datum())
 			d3player.transition()
-					.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
+					.attr("cx", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
 					.attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
 					.duration(500);
             prevtile.attr("class", prevtile.attr("class").replace("F","W"));
@@ -85,7 +85,7 @@ class SinglePlayerMaze extends React.Component {
     var width  = 100;
     var height = 100;
 	var h = height/16;//tile height
-	var w = h
+	var w = width/16;
 
     //M var menu = d3.select("svg");
 
