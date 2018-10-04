@@ -10,7 +10,6 @@ class MazeManager extends React.Component {
       mazes: [],
       selectedMazeToEdit: null
     };
-    this.createNewMaze = this.createNewMaze.bind(this)
   }
 
   componentWillMount() {
@@ -40,7 +39,7 @@ class MazeManager extends React.Component {
     let mazeButtons = [];
     this.state.mazes.forEach( maze => {
       mazeButtons.push(
-        <tr key={maze.id} onClick={() => this.editMaze(maze)}>
+        <tr key={maze.id} onClick={() => this.selectMaze(maze)}>
           <td className={getMazeClass(maze.id)}>{maze.name}</td>
         </tr>)
     });
@@ -57,7 +56,6 @@ class MazeManager extends React.Component {
               {this.displayMazes()}
             </tbody>
           </table>
-          <button onClick={this.createNewMaze}>Create a new Maze</button>
         </div>
         {this.state.selectedMazeToEdit != null
           ? <MazeEditor maze={this.state.selectedMazeToEdit} parentThis={this}/>
@@ -67,26 +65,7 @@ class MazeManager extends React.Component {
     );
   }
 
-  createNewMaze() {
-    let newMazeName = prompt("New maze's name?");
-    const requestBody = {
-      name: newMazeName
-    };
-    const _this = this;
-    axios.post('/mazes/', requestBody)
-      .then(res => {
-        axios.get(`/mazes/${res.data.id}`)
-          .then(res => {
-            _this.loadAllMazes(res.data);
-          }).catch(e => {
-            console.log("ERROR", e)
-        })
-      }).catch(e => {
-        console.log("ERROR", e)
-    })
-  }
-
-  editMaze(maze) {
+  selectMaze(maze) {
     this.setState({
       selectedMazeToEdit: maze
     });

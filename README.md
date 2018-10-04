@@ -16,6 +16,7 @@ Images are encouraged, along with concise, high-level text.
                             the browser's back button and easy navigation throughout the app
 - **Design Achievement 2**: The Node server uses a structured file system to organize the endpoints
 - **Design Achievement 3**: The Node server has a logging method that logs each endpoint to the console
+- **Design Achievement 4**: Added a Favicon to distinguish our app from every other open tab in your browser
 
 
 OLD ACIEVEMENTWS FROM PROJECT 3
