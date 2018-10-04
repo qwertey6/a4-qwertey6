@@ -66,9 +66,12 @@ class MazeManager extends React.Component {
   }
 
   selectMaze(maze) {
-    this.setState({
-      selectedMazeToEdit: maze
-    });
+    const _this = this;
+    sessionStorage.setItem('boardState', null);
+    axios.get(`/mazes/${maze.id}`)
+      .then(res => {
+        _this.setState({ selectedMazeToEdit: res.data })
+      })
   }
 }
 

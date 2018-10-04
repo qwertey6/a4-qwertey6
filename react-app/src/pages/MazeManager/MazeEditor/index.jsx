@@ -47,14 +47,21 @@ class MazeEditor extends React.Component {
   }
 
   saveEditableMaze() {
+    if (sessionStorage.getItem('boardState') == null){
+      alert(`The maze ${this.props.maze.name} has been saved`)
+      return
+    }
+
     let requestBody = {
-      maze: this.state.newlyEditedMaze
+      maze: sessionStorage.getItem('boardState')
     };
 
     //TODO: Make sure the maze has a start and end?
+    const _this = this;
     axios.put(`/mazes/${this.props.maze.id}`, requestBody)
       .then(() => {
-        console.log(`Successfully saved the maze ${this.props.maze.id}`)
+        alert(`The maze ${_this.props.maze.name} has been saved`);
+        _this.props.parentThis.loadAllMazes()
       }).catch(e => {
         console.log("ERROR", e);
     })

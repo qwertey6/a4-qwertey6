@@ -26,9 +26,10 @@ class EditableMaze extends React.Component {
     //converts the board back into a server friendly string
     function getBoardState(){
       var alltiles = [];
-      board.selectAll("rect").each(function(d){alltiles[d.x + d.y*16] = this})
-      return  alltiles.map(function(d){return d.className.baseVal.includes("B")})
+      board.selectAll("rect").each(function(d){alltiles[d.x + d.y*16] = this});
+      const boardState = alltiles.map(function(d){return d.className.baseVal.includes("B")})
         .map(function(d){return d ? "B" : "W";}).join("");
+      sessionStorage.setItem("boardState", boardState)
     }
 
     var tilehistory = [];// a list of recently visited tiles
@@ -112,6 +113,7 @@ class EditableMaze extends React.Component {
                     d.state = "B";
                     d3.select(this).attr("class", "B");
                   }
+                  getBoardState();
                 }
               })
               .on("click", function(d){
@@ -122,6 +124,7 @@ class EditableMaze extends React.Component {
                   d.state = "B"
                   d3.select(this).attr("class", "B")
                 }
+                getBoardState();
               })
           }
         }
