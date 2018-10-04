@@ -38,7 +38,7 @@ function random() {
       let nextX = x + delta[0]*2;
       let nextY = y + delta[1]*2;
 
-      if( nextY-1 < height && nextX-1 < width && nextX >= 0 && nextY >= 0 && !visited[pointHash(nextX, nextY)]) {
+      if( nextY < height && nextX < width && nextX >= 0 && nextY >= 0 && !visited[pointHash(nextX, nextY)]) {
         mazeArray[nextX][nextY] = "W";
         mazeArray[x2][y2] = "W";
         recurse(nextX, nextY);

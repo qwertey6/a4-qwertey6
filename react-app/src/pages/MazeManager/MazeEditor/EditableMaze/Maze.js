@@ -13,7 +13,7 @@ function getID() {//gets the "ID=___" part of the URL
 //converts the board back into a server friendly string
 function getBoardState(){
 	var alltiles = [];
-	board.selectAll("rect").each(function(d){alltiles[d.x + d.y*16] = this})
+	board.selectAll("rect").each(function(d){alltiles[d.x + d.y*16] = this});
 	return 	alltiles.map(function(d){return d.className.baseVal.includes("B")})
 			.map(function(d){return d ? "B" : "W";}).join("");
 }
