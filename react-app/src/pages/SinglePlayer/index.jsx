@@ -51,8 +51,8 @@ class SinglePlayer extends React.Component {
         <div id="playable-maze">
           {this.state.selectedMazeToPlay != null
             ? [
-              <h2>{this.state.selectedMazeToPlay.name}</h2>,
-              <SinglePlayerMaze maze={this.state.selectedMazeToPlay}/>
+              <h2 key={1}>{this.state.selectedMazeToPlay.name}</h2>,
+              <SinglePlayerMaze key={2} maze={this.state.selectedMazeToPlay}/>
             ]
             : null
           }
