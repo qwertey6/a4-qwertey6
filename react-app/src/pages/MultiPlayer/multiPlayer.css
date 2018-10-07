@@ -1,0 +1,36 @@
+#multi-player {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#maze-selector {
+    margin-left: 1%;
+    width: 80%;
+    height: 25%;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#playable-maze {
+    width: 80%;
+    height: 70%;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mazes-to-play {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+}
+
+.aaa {
+    border: 3px solid black;
+}
