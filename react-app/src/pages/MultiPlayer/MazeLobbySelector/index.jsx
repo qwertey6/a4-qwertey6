@@ -69,6 +69,7 @@ class MazeLobbySelector extends React.Component {
   componentDidMount(){
     const { endpoint } = this.state;
     this.socket = socketIOClient(endpoint);
+    this.socket.emit('pingMazeLobbies');
     this.socket.on("mazeLobbies", data => {
       // Update each maze's lobby size
       for (let mazeID in data){
@@ -85,7 +86,6 @@ class MazeLobbySelector extends React.Component {
   }
 
   joinLobby(){
-    this.socket.emit('playerJoinedLobby', { mazeID: this.state.selectedMaze.id, player: this.props.player });
     this.props.parentState.setState({ currentLobby: this.state.selectedMaze })
   }
 }

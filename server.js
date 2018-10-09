@@ -61,21 +61,27 @@ io.on('connection', (socket) => {
     } else {
       mazeLobbies[mazeID].push(player)
     }
+    io.sockets.emit("mazeLobbies", mazeLobbies);
   });
   socket.on('playerLeftLobby', (data) => {
     const mazeID = data.mazeID;
     const player = data.player;
     mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1)
+    io.sockets.emit("mazeLobbies", mazeLobbies);
   })
   socket.on('playerStartedGame', (maze) => {
     console.log("Player started game!");
     io.sockets.emit('gameStart', {maze: maze, players: mazeLobbies[maze.id]})
     mazeLobbies[maze.id] = [] // Clear the lobby for this maze
+    io.sockets.emit("mazeLobbies", mazeLobbies);
+  })
+  socket.on('pingMazeLobbies', () => {
+    io.sockets.emit("mazeLobbies", mazeLobbies);
   })
 });
 
 setInterval(function() {
-  io.sockets.emit("mazeLobbies", mazeLobbies);
+  // Can emit to sockets here on an interval
 }, 1000 / 60);
 /********************END LOBBIES*************************/
 
