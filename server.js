@@ -67,6 +67,11 @@ io.on('connection', (socket) => {
     const player = data.player;
     mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1)
   })
+  socket.on('playerStartedGame', (maze) => {
+    console.log("Player started game!");
+    io.sockets.emit('gameStart', {maze: maze, players: mazeLobbies[maze.id]})
+    mazeLobbies[maze.id] = [] // Clear the lobby for this maze
+  })
 });
 
 setInterval(function() {
