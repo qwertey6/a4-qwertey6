@@ -34,13 +34,13 @@ class SinglePlayerMaze extends React.Component {
     	*...
     	or null
     */
-    function abilityHandler(){
-    	if(player.use_ability == true){// only use their ability if this player has activated their ability
-			player.use_ability = false;//mark that we have used up this player's ability for this "turn"
-			switch(player.ability){//switch onto the right ability to use
+    function abilityHandler(p){
+    	if(p.use_ability == true){// only use their ability if this player has activated their ability
+			p.use_ability = false;//mark that we have used up this player's ability for this "turn"
+			switch(p.ability){//switch onto the right ability to use
 				case "dig":
 				console.log("digging")
-					let digTile = getTile(player.x+player.dx, player.y+player.dy);//select the element where the player is trying to move
+					let digTile = getTile(p.x+p.dx, p.y+p.dy);//select the element where the player is trying to move
 					if(digTile == false){return;}
 					if(!digTile.node().className.baseVal.includes("B")){return;}//if we have not selected any tile, then the player is likely trying to dig out of the maze, so exit
 
@@ -95,68 +95,70 @@ class SinglePlayerMaze extends React.Component {
 
     //Tile states: B=unnavigable W=navigable F=already navigated
     function playerHandler(){
-    	return function(){// TODO : this function will take in a player object
-    		if(!player.update){return;}//only update the player if the player has performed an action
-    		player.update = false;//then mark that we have handled this action
-    		let update_pos = false;//whether to update the player position at the end of this turn.
-    		if(player.ability == "dig" || player.ability == "slime"){player.use_ability = true;}//if the player's ability is digging or sliming, then try to dig/slime at every step
-    		let curtile = getTile(player.x + player.dx, player.y+player.dy);
-    		let prevtile = getTile(player.x, player.y);
-    		/* This code chunk assures that the current tile is adjacent to the previous tile. SHOULDNT be needed, but may be used in multiplayer.
-	        if(((curtile.datum().x == prevtile.datum().x-1) && (curtile.datum().y == prevtile.datum().y  )) ||
-	           ((curtile.datum().x == prevtile.datum().x+1) && (curtile.datum().y == prevtile.datum().y  )) ||
-	           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y+1)) ||
-	           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y-1))){
-	        */
-	        if(curtile){
-				switch(curtile.attr("class")){
-					//Do not do anything if the current tile's state is unnavigable
-					case "B":
-						update_pos = false;
-						break;
-					
-					//If we are moving back a tile, unmark/unnavigate the previous tile
-					case "F":
-						d3player.transition()
-								.attr("cx", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
-								.attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
-								.duration(200);
-					    prevtile.attr("class", prevtile.attr("class").replace("F","W"));
-					    update_pos = true;
-					    //then move our player into the tile
-					    /*
-					    if(tilehistory.length != 1){
-					    	tilehistory.pop();//remove the most recent tile from history
-					    }*///don't pop our origin
-				  		break;
+    	return function(){
+    		for (let p of players){ //this function iterates over all players and updates them if they need updating
+	    		if(!p.update){continue;}//only update the player if the player has performed an action
+	    		p.update = false;//then mark that we have handled this action
+	    		let update_pos = false;//whether to update the player position at the end of this turn.
+	    		if(p.ability == "dig" || p.ability == "slime"){p.use_ability = true;}//if the player's ability is digging or sliming, then try to dig/slime at every step
+	    		let curtile = getTile(p.x + p.dx, p.y+p.dy);
+	    		let prevtile = getTile(p.x, p.y);
+	    		/* This code chunk assures that the current tile is adjacent to the previous tile. SHOULDNT be needed, but may be used in multiplayer.
+		        if(((curtile.datum().x == prevtile.datum().x-1) && (curtile.datum().y == prevtile.datum().y  )) ||
+		           ((curtile.datum().x == prevtile.datum().x+1) && (curtile.datum().y == prevtile.datum().y  )) ||
+		           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y+1)) ||
+		           ((curtile.datum().x == prevtile.datum().x  ) && (curtile.datum().y == prevtile.datum().y-1))){
+		        */
+		        if(curtile){
+					switch(curtile.attr("class")){
+						//Do not do anything if the current tile's state is unnavigable
+						case "B":
+							update_pos = false;
+							break;
+						
+						//If we are moving back a tile, unmark/unnavigate the previous tile
+						case "F":
+							d3player.transition() // TODO :: USE THE p.icon ATTRIBUTE OF OUR PLAYER!!!
+									.attr("cx", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
+									.attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
+									.duration(200);
+						    prevtile.attr("class", prevtile.attr("class").replace("F","W"));
+						    update_pos = true;
+						    //then move our player into the tile
+						    /*
+						    if(tilehistory.length != 1){
+						    	tilehistory.pop();//remove the most recent tile from history
+						    }*///don't pop our origin
+					  		break;
 
-					//If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
-					case "W":
-						curtile.attr("class", curtile.attr("class").replace("W","F"));
-						//tilehistory.push(curtile);//add the current tile to the top of our tile history
-						d3player.transition()
-								.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
-								.attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
-								.duration(200);
-						if(curtile.datum().x == 15 && curtile.datum().y == 15){
-							alert("Winrar is you!")
-						}
-						update_pos = true;
-						break;
-					default:
-						console.log("UNKNOWN TILE TYPE/CLASS - MUST BE ONE OF 'B'/'W'/'F'");
-						break;
+						//If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
+						case "W":
+							curtile.attr("class", curtile.attr("class").replace("W","F"));
+							//tilehistory.push(curtile);//add the current tile to the top of our tile history
+							d3player.transition()
+									.attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
+									.attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
+									.duration(200);
+							if(curtile.datum().x == 15 && curtile.datum().y == 15){
+								alert("Winrar is you!")
+							}
+							update_pos = true;
+							break;
+						default:
+							console.log("UNKNOWN TILE TYPE/CLASS - MUST BE ONE OF 'B'/'W'/'F'");
+							break;
+					}
 				}
-			}
-	        //}
-	        //console.log(player);
-    		abilityHandler();
-    		if(update_pos){
-			player.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
-			player.dx = 0;
-			player.y += player.dy;
-			player.dy = 0;
-    	}
+		        //}
+		        //console.log(player);
+	    		abilityHandler(p);
+	    		if(update_pos){
+				p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
+				p.dx = 0;
+				p.y += player.dy;
+				p.dy = 0;
+	    	}
+	    	}
     	}
     }
 
@@ -170,6 +172,9 @@ class SinglePlayerMaze extends React.Component {
     var board = d3.select("svg").append("g").attr("class","board");
     var handler = playerHandler();//MazeNavigationHandler();//set 1 handler to handle all mouse over events
     var d3player = d3.select("svg").append("circle"); //we append the player here, so that the player is always above the board
+    var players = [];
+    players.push(player);
+
     d3player.attr("fill", "red")
     		.attr("r", width/16/2)
     		.attr("cx", w/2+"%")
@@ -236,9 +241,13 @@ class SinglePlayerMaze extends React.Component {
 					player.update = 1;
 					break;
     		}
+    		transmit(player);// send our move to the server
     		handler();
     		//after updating our player object, we can call the movement handler on it.
 	})
+    function transmit(p){
+    	//todo: implement sending the player object to the server somehow
+    }
 }
 }
 export default SinglePlayerMaze
