@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./Mazes.db');
+
 /*
 var seed = 1;
 function random() {
@@ -97,7 +98,7 @@ routes.post('/', function(req, res) {
   if (name == null) {
     res.status(400).end("Missing name in body")
   }
-  db.run(`INSERT INTO 'mazes' (id, name, maze) VALUES ("${id}", "${name}", "${makeMaze()}")`, [], (err) => {
+  db.run(`INSERT INTO 'mazes' (id, name, maze, high_score) VALUES ("${id}", "${name}", "${makeMaze()}", "${999999}")`, [], (err) => {
     if (err) {
       console.log(err);
       res.status(400).end()
@@ -107,13 +108,20 @@ routes.post('/', function(req, res) {
   });
 });
 
-// Input body: maze
+// Input body: maze, or highScore
 // Input param: id
 // Output: 204 if updated, 400 else
 routes.put('/:id', function(req, res) {
   const idToUpdate = req.params.id;
   const updatedMaze = req.body.maze;
-  db.run(`UPDATE 'mazes' SET maze="${updatedMaze}" WHERE id="${idToUpdate}"`, [], (err, row) => {
+  const updatedHighScore = req.body.highScore;
+  let sqlStatement = '';
+  if (updatedMaze != null) {
+    sqlStatement = `UPDATE 'mazes' SET maze="${updatedMaze}" WHERE id="${idToUpdate}"`
+  } else if (updatedHighScore != null){
+    sqlStatement = `UPDATE 'mazes' SET high_score="${updatedHighScore}" WHERE id="${idToUpdate}"`
+  }
+  db.run(sqlStatement, [], (err, row) => {
     if (err) {
       console.log(err)
     } else {

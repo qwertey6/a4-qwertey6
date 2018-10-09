@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
-import MultiPlayerMaze from "./MultiPlayerMaze/index";
+import MazeLobbySelector from "./MazeLobbySelector";
+import MazeLobby from "./MazeLobby";
 
 import './multiPlayer.css'
 
@@ -8,10 +9,8 @@ class MultiPlayer extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      mazes: [],
-      selectedMazeToPlay: null
+      currentLobby: null
     };
-    this.playMaze = this.playMaze.bind(this);
   }
 
   componentWillMount() {
@@ -19,8 +18,7 @@ class MultiPlayer extends React.Component {
     axios.get('/mazes')
       .then(res => {
         _this.setState({
-          mazes: res.data,
-          selectedMazeToPlay: res.data[0]
+          mazes: res.data
         })
       })
   }
@@ -42,21 +40,10 @@ class MultiPlayer extends React.Component {
   render() {
     return (
       <div id="multi-player">
-        <div id="maze-selector">
-          <h2>Select a maze to Play:</h2>
-          <div id="mazes-to-play">
-            {this.displayMazes()}
-          </div>
-        </div>
-        <div id="playable-maze">
-          {this.state.selectedMazeToPlay != null
-            ? [
-              <h2 key={1}>{this.state.selectedMazeToPlay.name}</h2>,
-              <MultiPlayerMaze key={2} maze={this.state.selectedMazeToPlay}/>
-            ]
-            : null
-          }
-        </div>
+        {this.state.currentLobby == null
+          ? <MazeLobbySelector parentState={this} player={this.props.player}/>
+          : <MazeLobby maze={this.state.currentLobby} />
+        }
       </div>
     );
   }
