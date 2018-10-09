@@ -6,14 +6,15 @@ class MazeLobby extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      lobby: [],
-      firstPlayer: false
+      lobby: []
     };
+    this.leaveLobby = this.leaveLobby.bind(this)
   }
 
   render() {
     return (
       <div id="maze-lobby">
+        <button onClick={() => this.leaveLobby()}>Leave Lobby</button>
         <h2>Number of players in the lobby: {this.state.lobby.length}</h2>
         {this.state.firstPlayer ? <button>Start Game</button> : null}
       </div>
@@ -22,18 +23,27 @@ class MazeLobby extends React.Component {
 
   componentDidMount() {
     const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("mazeLobbies", data => {
-      data.forEach(mazeLobby => {
-        if (mazeLobby.mazeID === this.props.maze.mazeID){
-          const firstPlayer = mazeLobby.length === 1;
+    this.socket = socketIOClient(endpoint);
+    this.socket.on("mazeLobbies", mazeLobbies => {
+      for (let mazeID in mazeLobbies){
+        if (parseInt(mazeID) === this.props.maze.id){
+          let firstPlayer = (mazeLobbies[mazeID].indexOf(this.props.player) === 0);
           this.setState({
-            lobby: mazeLobby.lobby,
+            lobby: mazeLobbies[mazeID],
             firstPlayer: firstPlayer
-          })
+          });
         }
-      })
+      }
     });
+  }
+
+  componentWillUnmount() {
+    this.socket.close()
+  }
+
+  leaveLobby() {
+    this.socket.emit('playerLeftLobby', { mazeID: this.props.maze.id, player: this.props.player });
+    this.props.parentState.setState({ currentLobby: null })
   }
 
 }

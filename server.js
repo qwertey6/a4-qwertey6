@@ -50,14 +50,8 @@ server.get('*', (req,res) =>{
 
 /**********************LOBBIES***************************/
 let mazeLobbies = {}; // Key = mazeID, Value = list of player objects that are in that maze's lobby
-let usersConnected = 0;
 io.on('connection', (socket) => {
-  usersConnected += 1;
-  console.log('Users connected:' + usersConnected);
-  socket.on("disconnect", () => {
-    usersConnected -= 1;
-  });
-  socket.on("playerJoinLobby", (data) => {
+  socket.on("playerJoinedLobby", (data) => {
     const mazeID = data.mazeID;
     const player = data.player;
     if (mazeLobbies[mazeID] == null) {
@@ -67,22 +61,16 @@ io.on('connection', (socket) => {
     } else {
       mazeLobbies[mazeID].push(player)
     }
+  });
+  socket.on('playerLeftLobby', (data) => {
+    const mazeID = data.mazeID;
+    const player = data.player;
+    mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1)
   })
 });
 
 setInterval(function() {
-  let listOfLobbyObjects = [];
-  Object.keys(mazeLobbies).forEach(key => {
-    console.log(key)
-    listOfLobbyObjects.push({
-      mazeID: key,
-      lobby: mazeLobbies[key]
-    })
-  });
-  io.sockets.emit("playerConnection", usersConnected);
-  io.sockets.emit("mazeLobbies", listOfLobbyObjects)
-
-  ;
+  io.sockets.emit("mazeLobbies", mazeLobbies);
 }, 1000 / 60);
 /********************END LOBBIES*************************/
 
