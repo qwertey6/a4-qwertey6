@@ -13,7 +13,7 @@ class App extends React.Component {
     this.state = {
       username: null,
       avatar: null,
-      powerAbility: null,
+      ability: null,
       userID: Date.now().toString(36)
     }
   }
@@ -22,7 +22,7 @@ class App extends React.Component {
     const player = {
       username: this.state.username,
       avatar: this.state.avatar,
-      powerAbility: this.state.powerAbility,
+      ability: this.state.ability,
       id: this.state.userID
     };
     return (
