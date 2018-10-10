@@ -191,7 +191,11 @@ class MultiPlayerMaze extends React.Component {
         let curtile = getTile(p.x + p.dx, p.y+p.dy);
         let prevtile = getTile(p.x, p.y);
         let slimed = isSlimed(p.x, p.y) || isSlimed(p.x + p.dx, p.y + p.dy);
-
+      
+        let pview = d3players.select("."+p.id);
+        let pw = Number(pview.attr("width").replace("%", ""));
+        let ph = Number(pview.attr("height").replace("%", ""));
+      
         if(curtile){
           switch(curtile.attr("class")){
             //Do not do anything if the current tile's state is unnavigable
@@ -201,10 +205,6 @@ class MultiPlayerMaze extends React.Component {
 
             //If we are moving back a tile, unmark/unnavigate the previous tile
             case "F":
-              d3players.select("."+p.id).transition() // TODO :: USE THE p.icon ATTRIBUTE OF OUR PLAYER!!!
-                .attr("x", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
-                .attr("y", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
-                .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
               prevtile.attr("class", prevtile.attr("class").replace("F","W"));
               update_pos = true;
               break;
@@ -212,13 +212,6 @@ class MultiPlayerMaze extends React.Component {
             //If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
             case "W":
               curtile.attr("class", curtile.attr("class").replace("W","F"));
-              d3players.select("."+p.id).transition()
-                .attr("x", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
-                .attr("y", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
-                .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
-              if(curtile.datum().x == 15 && curtile.datum().y == 15){
-                // alert("Winrar is you!")
-              }
               update_pos = true;
               break;
             default:
@@ -229,6 +222,11 @@ class MultiPlayerMaze extends React.Component {
         //console.log(player);
         abilityHandler(p);
         if(update_pos){
+          pview.transition()
+            .attr("x", randbetween(curtile.datum().x * w + pw/2, (curtile.datum().x+1)*w - pw/2)+"%")
+            .attr("y", randbetween(curtile.datum().y * h + ph/2, (curtile.datum().y+1)*h - ph/2)+"%")
+            .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
+
           p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
           p.dx = 0;
           p.y += player.dy;
@@ -251,13 +249,6 @@ class MultiPlayerMaze extends React.Component {
     var slimes = d3.select("svg").append("g").attr("class","slime");
     var players = game.players;
 
-    for(let p of players){
-      d3players.append("svg:image")
-        .attr("class", p.id)
-        .attr("xlink:href", p.icon)
-        .attr("width", w/2 + "%")
-        .attr("height", h/2 + "%");
-    }
 
     let player = null;
     players.forEach(p => {
@@ -271,7 +262,15 @@ class MultiPlayerMaze extends React.Component {
       .attr("cx", w/2+"%")
       .attr("cy", h/2+"%");
   */
+    console.log(player.icon);
     player.icon = require(`../../../pictures/avatars/${player.avatar}.svg`);//set the player's icon to the d3player node
+    for(let p of players){
+      d3players.append("svg:image")
+        .attr("class", p.id)
+        .attr("xlink:href", p.icon)
+        .attr("width", w/2 + "%")
+        .attr("height", h/2 + "%");
+    }
     //console.log(player.icon);
     // function loadPlayer(p){
     //   d3.xml(p.icon, function(error, xml){
@@ -345,7 +344,6 @@ class MultiPlayerMaze extends React.Component {
         //after updating our player object, we can call the movement handler on it.
       })
     function transmit(p){
-      let netplayer = {};
       _this.socket.emit('playerMove', _this.props.game, p)
     }
   }

@@ -18,7 +18,7 @@ class MazeLobby extends React.Component {
     return (
       <div id="maze-lobby">
         <h2><b>Number of players in the lobby:{this.state.lobby.length}</b></h2>
-        {this.state.firstPlayer && this.state.lobby.length > 1
+        {this.state.firstPlayer && this.state.lobby.length > 0 // TODO ::: CHANGE THIS LINE WHEN WE RELEASE THE GAME!!!
           ? <button onClick={() => this.startGame()} className="green">Start Game</button>
           : [
             <ReactLoading type={"spin"} color={"#4CAF50"} height={'20%'} width={'20%'} />,
