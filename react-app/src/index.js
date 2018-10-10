@@ -22,7 +22,8 @@ class App extends React.Component {
     const player = {
       username: this.state.username,
       avatar: this.state.avatar,
-      powerAbility: this.state.powerAbility
+      powerAbility: this.state.powerAbility,
+      id: this.state.userID
     };
     return (
       <Router>

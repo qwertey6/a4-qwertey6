@@ -9,7 +9,6 @@ class MazeLobbySelector extends React.Component {
     this.state = {
       mazes: [],
       selectedMaze: null,
-      playersConnected: 0
     };
     this.joinLobby = this.joinLobby.bind(this);
   }
@@ -31,36 +30,33 @@ class MazeLobbySelector extends React.Component {
         mazeButtons.push(
           <tr key={maze.id} onClick={() => this.setState({ selectedMaze: maze })}>
             <td>{maze.name}</td>
-            <td id={maze.id + "_lobbySize"}>0</td>
+            <td id={`${maze.id}_lobbySize`}>0</td>
             <td>{maze.high_score == null ? "N/A" : maze.high_score}</td>
           </tr>
         )
       });
     }
-    return mazeButtons
+    return (
+      <table>
+        <thead><tr><th>Name</th><th># Players waiting in Lobby</th><th>High Score</th></tr></thead>
+        <tbody>{mazeButtons}</tbody>
+      </table>
+    )
   }
 
   render() {
     return (
       <div id="maze-lobby-selector">
-        <h2>Number of Players connected: {this.state.playersConnected}</h2>
         <h2>Join a maze's lobby:</h2>
         <div id="maze-lobbys-to-join">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th># Players waiting in Lobby</th>
-                <th>High Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.displayMazes()}
-            </tbody>
-          </table>
-          <div>
-            SVG OF SELECTED MAZE GOES HERE
-          </div>
+          {this.displayMazes()}
+          {this.state.selectedMaze != null
+            ?
+            <div>
+              SVG OF SELECTED MAZE GOES HERE
+            </div>
+            : null
+          }
         </div>
         {this.state.selectedMaze != null
           ? <button onClick={() => this.joinLobby()}>Join {this.state.selectedMaze.name}'s Lobby</button>
@@ -72,21 +68,24 @@ class MazeLobbySelector extends React.Component {
 
   componentDidMount(){
     const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.on("mazeLobbies", data => {
-      data.forEach(mazeLobby => {
-        document.getElementById(`${mazeLobby.mazeID}_lobbySize`).value = mazeLobby.lobby.length
-      })
-    });
-    socket.on("playerConnectionUpdate", data => {
-      this.setState({ playersConnected: data })
+    this.socket = socketIOClient(endpoint);
+    this.socket.emit('pingMazeLobbies');
+    this.socket.on("mazeLobbies", data => {
+      // Update each maze's lobby size
+      for (let mazeID in data){
+        const mazeRowInTable = document.getElementById(`${mazeID}_lobbySize`);
+        if (mazeRowInTable != null){
+          mazeRowInTable.innerText = data[mazeID].length
+        }
+      }
     })
   }
 
+  componentWillUnmount() {
+    this.socket.close()
+  }
+
   joinLobby(){
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.emit('playerJoinLobby', { mazeID: this.state.selectedMaze, player: this.props.player });
     this.props.parentState.setState({ currentLobby: this.state.selectedMaze })
   }
 }
