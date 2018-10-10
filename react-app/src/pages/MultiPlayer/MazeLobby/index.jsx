@@ -1,7 +1,7 @@
 import React from 'react'
 import socketIOClient from "socket.io-client";
 import './mazeLobby.css'
-import MultiPlayerMaze from "../MultiPlayerMaze";
+import ReactLoading from 'react-loading';
 
 class MazeLobby extends React.Component {
   constructor(props){
@@ -17,12 +17,18 @@ class MazeLobby extends React.Component {
     console.log(this.state.lobby)
     return (
       <div id="maze-lobby">
-        <button onClick={() => this.leaveLobby()}>Leave Lobby</button>
-        <h2>Number of players in the lobby: {this.state.lobby.length}</h2>
-        {this.state.firstPlayer
-          ? <button onClick={() => this.startGame()}>Start Game</button>
-          : <h2>Waiting until player1 starts the game...</h2>
+        <h2><b>Number of players in the lobby:{this.state.lobby.length}</b></h2>
+        {this.state.firstPlayer && this.state.lobby.length > 1
+          ? <button onClick={() => this.startGame()} className="green">Start Game</button>
+          : [
+            <ReactLoading type={"spin"} color={"#4CAF50"} height={'20%'} width={'20%'} />,
+            (this.state.firstPlayer
+                ? <h2>Waiting for more players</h2>
+                : <h2>Waiting until the first player starts the game...</h2>
+            )
+          ]
         }
+        <button onClick={() => this.leaveLobby()} className="red">Leave Lobby</button>
       </div>
     );
   }

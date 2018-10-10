@@ -37,10 +37,17 @@ class Home extends React.Component {
           onClick={() => this.setAvatar(avatar)}
           src={require(`../../pictures/avatars/${avatar}.svg`)}
           alt={avatar}
+          data-tip={avatar.toUpperCase()}
         />
       )
     };
     const makeAbilityImage = (ability) => {
+      let dataTip = "";
+      if (ability === "dig"){
+        dataTip = "DIG: You have the ability to dig through walls"
+      } else if (ability === "slime"){
+        dataTip = "SLIME: You leave behind a slime trail that slows "
+      }
       return (
         <img
           className={this.getAbilityClass(ability)}
@@ -49,15 +56,16 @@ class Home extends React.Component {
           onClick={() => this.setAbility(ability)}
           src={require(`../../pictures/abilities/${ability}.svg`)}
           alt={ability}
+          data-tip={dataTip}
         />
       )
     };
     return (
       <div id="sign-in">
-        <h2>Sign In</h2>
+        <h2>Create a username</h2>
         <input type="text" id="username" onChange={this.setUsername} placeholder="Enter a username here..." defaultValue={this.props.rootState.state.username}/>
         <h2>Choose your avatar</h2>
-        <div id="avatars">
+        <div id="avatars" align="center">
           {makeAvatarImage("circle")}
           {makeAvatarImage("square")}
           {makeAvatarImage("sun")}
@@ -72,7 +80,7 @@ class Home extends React.Component {
         </div>
         {rootState.username != null && rootState.avatar != null && rootState.powerAbility != null
           ?
-          <div id="game-options">
+          <div id="game-options" align="center">
             <Link to='/maze-manager' className="button yellow">Edit/Create Mazes</Link>
             <Link to='/single-player' className="button blue">Singleplayer</Link>
             <Link to='/multi-player' className="button green">Multiplayer</Link>

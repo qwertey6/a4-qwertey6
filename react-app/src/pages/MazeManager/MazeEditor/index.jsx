@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import EditableMaze from "./EditableMaze/index";
+import { NotificationManager } from 'react-notifications';
 
 class MazeEditor extends React.Component {
   constructor(props){
@@ -29,6 +30,10 @@ class MazeEditor extends React.Component {
 
   createNewMaze() {
     let newMazeName = prompt("New maze's name?");
+    if (newMazeName.length > 15){
+      NotificationManager.error('Maze name cannot exceed 15 characters');
+      return;
+    }
     const requestBody = {
       name: newMazeName
     };
@@ -38,6 +43,7 @@ class MazeEditor extends React.Component {
         axios.get(`/mazes/${res.data.id}`)
           .then(res => {
             _this.props.parentThis.loadAllMazes();
+            NotificationManager.success(`Created the maze ${newMazeName}`);
           }).catch(e => {
           console.log("ERROR", e)
         })
@@ -48,7 +54,7 @@ class MazeEditor extends React.Component {
 
   saveEditableMaze() {
     if (sessionStorage.getItem('boardState') == null){
-      alert(`The maze ${this.props.maze.name} has been saved`)
+      NotificationManager.success(`The maze ${this.props.maze.name} has been saved`)
       return
     }
 
@@ -60,7 +66,7 @@ class MazeEditor extends React.Component {
     const _this = this;
     axios.put(`/mazes/${this.props.maze.id}`, requestBody)
       .then(() => {
-        alert(`The maze ${_this.props.maze.name} has been saved`);
+        NotificationManager.success(`The maze ${_this.props.maze.name} has been saved`);
         _this.props.parentThis.loadAllMazes()
       }).catch(e => {
         console.log("ERROR", e);
@@ -69,12 +75,13 @@ class MazeEditor extends React.Component {
 
   deleteMaze() {
     if (this.props.numberOfMazes === 1){
-      alert("Sorry, you cannot delete the last maze");
+      NotificationManager.warning(`You cannot delete the last maze`);
       return;
     }
     const _this = this;
     axios.delete(`/mazes/${_this.props.maze.id}`)
       .then(res => {
+        NotificationManager.success(`Deleted the maze ${_this.props.maze.name}`);
         _this.props.parentThis.loadAllMazes()
       }).catch(e => {
         console.log("ERROR", e)

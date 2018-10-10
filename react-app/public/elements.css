@@ -62,8 +62,8 @@ a.button {
 }
 
 td {
-    border: 3px solid transparent;
     padding: 8px;
+    word-wrap: break-word;
 }
 
 tr {
@@ -73,3 +73,14 @@ tr {
 tr:nth-child(even){background-color: #f2f2f2;}
 
 tr:hover {background-color: #ddd;}
+
+h1 {
+    font-size: 40px;
+    margin: 10px;
+}
+
+th {
+    padding: 8px;
+    background-color: #02C39A;
+
+}
