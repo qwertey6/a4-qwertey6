@@ -57,9 +57,8 @@ class MultiPlayerMaze extends React.Component {
     const _this = this;
     let game = this.props.game;
 
-    this.socket.on(`updatedPlayerGameTick-${this.props.game.id}`, (g) => {
-      game = g;
-      game.players.forEach(updatePlayer);
+    this.socket.on(`updatedPlayerGameTick-${this.props.game.id}`, (p) => {
+      updatePlayer(p);
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
