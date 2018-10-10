@@ -57,10 +57,10 @@ class MultiPlayerMaze extends React.Component {
   playableMazeScript(){
     const _this = this;
     let game = this.props.game;
-    this.socket.on(`gameTick-${this.props.game.id}`, (g) => {
+
+    this.socket.on(`updatedPlayerGameTick-${this.props.game.id}`, (g) => {
       game = g;
-      g.players.forEach(updatePlayer);
-      console.log(players);
+      game.players.forEach(updatePlayer);
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
@@ -346,7 +346,7 @@ class MultiPlayerMaze extends React.Component {
         //after updating our player object, we can call the movement handler on it.
       })
     function transmit(p){
-      _this.socket.emit('playerMove', _this.props.game, p)
+      _this.socket.emit('playerMove', _this.props.game.id, p)
     }
   }
 
