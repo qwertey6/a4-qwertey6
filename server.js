@@ -99,35 +99,36 @@ io.on('connection', (socket) => {
   socket.on('playerMove', (gameID, updatedPlayer) => {
     console.log("PLAYER MOVED");
     for (let i = 0; i < activeGames.length; i++){
-      if (activeGames[i].id === gameID){
+      const game = activeGames[i]
+      if (game.id === gameID){
         if (updatedPlayer.x === 15 && updatedPlayer.y === 15){
           console.log(`Player ${updatedPlayer.username} won!`);
           activeGames.splice(i, 1); // Remove the game from the list of active games
-          const time = Math.floor(new Date()) - activeGames[i].start;
+          const time = Math.floor(new Date()) - game.start;
           const results = {
             time: time,
             player: updatedPlayer
           };
-          io.sockets.emit(`mazeWinner-${activeGames[i].id}`, results);
-          if (time < activeGames[i].maze.high_score){
-            db.run(`UPDATE 'mazes' SET high_score="${time}" WHERE id="${activeGames[i].maze.id}"`, [], (err, row) => {
+          io.sockets.emit(`mazeWinner-${game.id}`, results);
+          if (time < game.maze.high_score){
+            db.run(`UPDATE 'mazes' SET high_score="${time}" WHERE id="${game.maze.id}"`, [], (err, row) => {
               if (err) {
                 console.log(err);
               } else {
-                console.log(`Saved maze ${activeGames[i].maze.name}'s high score of ${time}`)
+                console.log(`Saved maze ${game.maze.name}'s high score of ${time}`)
               }
             })
           }
           break;
         }
-        activeGames[i].players.map(player => {
+        game.players.map(player => {
           if (player.id === updatedPlayer.id){
             return updatedPlayer
           } else {
             return player
           }
         });
-        io.sockets.emit(`updatedPlayerGameTick-${activeGames[i].id}`, updatedPlayer);
+        io.sockets.emit(`updatedPlayerGameTick-${game.id}`, updatedPlayer);
         break
       }
     }
