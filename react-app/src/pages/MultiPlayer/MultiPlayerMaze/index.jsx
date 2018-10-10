@@ -60,6 +60,7 @@ class MultiPlayerMaze extends React.Component {
     this.socket.on(`gameTick-${this.props.game.id}`, (g) => {
       game = g;
       g.players.forEach(updatePlayer);
+      console.log(players);
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
@@ -263,8 +264,9 @@ class MultiPlayerMaze extends React.Component {
       .attr("cy", h/2+"%");
   */
     console.log(player.icon);
-    player.icon = require(`../../../pictures/avatars/${player.avatar}.svg`);//set the player's icon to the d3player node
+
     for(let p of players){
+      p.icon = require(`../../../pictures/avatars/${p.avatar}.svg`);//set the player's icon to the d3player node
       d3players.append("svg:image")
         .attr("class", p.id)
         .attr("xlink:href", p.icon)
