@@ -15,7 +15,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       username: null,
-      avatar: null,
+      icon: null,
       ability: null,
       userID: Date.now().toString(36)
     }
@@ -24,7 +24,7 @@ class App extends React.Component {
   render() {
     const player = {
       username: this.state.username,
-      avatar: this.state.avatar,
+      icon: this.state.icon,
       ability: this.state.ability,
       id: this.state.userID
     };

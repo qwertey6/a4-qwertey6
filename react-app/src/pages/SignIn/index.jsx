@@ -11,7 +11,7 @@ class Home extends React.Component {
   }
 
   getAvatarClass(avatar){
-    if (this.props.rootState.state.avatar === avatar){
+    if (this.props.rootState.state.icon === avatar){
       return "avatar selected"
     } else {
       return "avatar"
@@ -19,7 +19,7 @@ class Home extends React.Component {
   }
 
   getAbilityClass(ability){
-    if (this.props.rootState.state.powerAbility === ability){
+    if (this.props.rootState.state.ability === ability){
       return "ability selected"
     } else {
       return "ability"
@@ -78,7 +78,7 @@ class Home extends React.Component {
           {makeAbilityImage("dig")}
           {makeAbilityImage("slime")}
         </div>
-        {rootState.username != null && rootState.avatar != null && rootState.powerAbility != null
+        {rootState.username != null && rootState.icon != null && rootState.ability != null
           ?
           <div id="game-options" align="center">
             <Link to='/maze-manager' className="button yellow">Edit/Create Mazes</Link>
@@ -99,13 +99,13 @@ class Home extends React.Component {
 
   setAvatar(avatar) {
     this.props.rootState.setState({
-      avatar: avatar
+      icon: avatar
     })
   }
 
   setAbility(ability) {
     this.props.rootState.setState({
-      powerAbility: ability
+      ability: ability
     })
   }
 }
