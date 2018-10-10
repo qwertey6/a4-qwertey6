@@ -254,7 +254,7 @@ class MultiPlayerMaze extends React.Component {
     let player = null;
     players.forEach(p => {
       if (p.id === this.props.player.id){
-        player = p
+        player = p;
       }
     });
 
@@ -266,7 +266,7 @@ class MultiPlayerMaze extends React.Component {
     console.log(player.icon);
 
     for(let p of players){
-      p.icon = require(`../../../pictures/avatars/${p.avatar}.svg`);//set the player's icon to the d3player node
+      p.icon = require(`../../../pictures/avatars/${p.icon}.svg`);//replace the name of the player's icon to the path to that icon svg
       d3players.append("svg:image")
         .attr("class", p.id)
         .attr("xlink:href", p.icon)

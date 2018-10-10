@@ -82,7 +82,7 @@ io.on('connection', (socket) => {
       player.dy = 0;
       player.update = false;
       player.use_ability = false;
-      player.tail = [];
+      player.trail = [];
       players.push(player)
     });
     const game = {
