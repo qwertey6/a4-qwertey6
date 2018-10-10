@@ -14,6 +14,7 @@ class MazeLobby extends React.Component {
   }
 
   render() {
+    console.log(this.state.lobby)
     return (
       <div id="maze-lobby">
         <button onClick={() => this.leaveLobby()}>Leave Lobby</button>
@@ -32,7 +33,8 @@ class MazeLobby extends React.Component {
     this.socket.emit('playerJoinedLobby', { mazeID: this.props.maze.id, player: this.props.player });
     this.socket.on("mazeLobbies", mazeLobbies => {
       for (let mazeID in mazeLobbies){
-        if (parseInt(mazeID) === this.props.maze.id){
+        console.log(mazeID, this.props.maze.id)
+        if (mazeID === this.props.maze.id){
           console.log(mazeLobbies[mazeID]);
           if (mazeLobbies[mazeID].length === 0){
             return // This only happens to the players immediately after player1 started the game

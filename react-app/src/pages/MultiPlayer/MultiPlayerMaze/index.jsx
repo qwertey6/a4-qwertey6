@@ -8,7 +8,6 @@ class MultiPlayerMaze extends React.Component {
     super(props);
     this.state = {
       winner: null,
-      game: this.props.game
     };
   }
 
@@ -42,15 +41,9 @@ class MultiPlayerMaze extends React.Component {
     const { endpoint } = this.state;
     this.socket = socketIOClient(endpoint);
     this.socket.on(`mazeWinner-${this.props.game.id}`, (results) => {
-      this.setState({ winner: results.winner })
+      console.log(results);
+      this.setState({ winner: results })
     });
-    this.socket.on(`gameTick-${this.props.game.id}`, (game) => {
-      this.setState({ game: game });
-    });
-    this.playableMazeScript()
-  }
-
-  componentDidUpdate(){
     this.playableMazeScript()
   }
 
@@ -63,6 +56,10 @@ class MultiPlayerMaze extends React.Component {
 
   playableMazeScript(){
     const _this = this;
+    let game = this.props.game;
+    this.socket.on(`gameTick-${this.props.game.id}`, (g) => {
+      game = g;
+    });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
     */
@@ -238,7 +235,7 @@ class MultiPlayerMaze extends React.Component {
     var handler = playerHandler();//MazeNavigationHandler();//set 1 handler to handle all mouse over events
     var d3player = d3.select("svg").append("circle"); //we append the player here, so that the player is always above the board
     var slimes = d3.select("svg").append("g").attr("class","slime");
-    var players = this.state.game.players;
+    var players = game.players;
     let player = null;
     players.forEach(p => {
       if (p.id === this.props.player.id){
@@ -253,7 +250,7 @@ class MultiPlayerMaze extends React.Component {
 
     player.icon = require(`../../../pictures/avatars/${player.avatar}.svg`);//set the player's icon to the d3player node
 
-    var data = this.state.game.maze;
+    var data = game.maze;
 
     for(var i=0; i<16; i++){//load columns
       for(var j=0; j<16; j++){//load rows

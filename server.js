@@ -53,6 +53,7 @@ let mazeLobbies = {}; // Key = mazeID, Value = list of player objects that are i
 let activeGames = []; // List of game objects
 io.on('connection', (socket) => {
   socket.on("playerJoinedLobby", (data) => {
+    console.log(`${data.player.username} joined lobby for ${data.mazeID}`);
     const mazeID = data.mazeID;
     const player = data.player;
     if (mazeLobbies[mazeID] == null) {
@@ -65,6 +66,7 @@ io.on('connection', (socket) => {
     io.sockets.emit("mazeLobbies", mazeLobbies);
   });
   socket.on('playerLeftLobby', (data) => {
+    console.log(`${data.player.username} left lobby for ${data.mazeID}`);
     const mazeID = data.mazeID;
     const player = data.player;
     mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1);
@@ -87,7 +89,7 @@ io.on('connection', (socket) => {
       maze: maze,
       players: players,
       id: Date.now().toString(36),
-      start: Math.floor(new Date() / 1000)
+      start: Math.floor(new Date()) + 3000 // +3000 for the maze countdown
     };
     activeGames.push(game);
     io.sockets.emit(`gameStart-${maze.id}`, game);
@@ -99,22 +101,27 @@ io.on('connection', (socket) => {
     for (let i = 0; i < activeGames.length; i++){
       if (activeGames[i].id === game.id){
         if (updatedPlayer.x === 15 && updatedPlayer.y === 15){
+          console.log(`Player ${updatedPlayer.username} won!`);
           activeGames.splice(i, 1); // Remove the game from the list of active games
-          const time = Math.floor(new Date() / 1000) - game.start;
+          const time = Math.floor(new Date()) - game.start;
           const results = {
             time: time,
             player: updatedPlayer
           };
           io.sockets.emit(`mazeWinner-${game.id}`, results);
           if (time < game.maze.high_score){
-            db.run(`UPDATE 'mazes' SET high_score="${time}" WHERE id="${game.maze.id}"`, [], (err, row) => {})
+            db.run(`UPDATE 'mazes' SET high_score="${time}" WHERE id="${game.maze.id}"`, [], (err, row) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(`Saved maze ${game.maze.name}'s high score of ${time}`)
+              }
+            })
           }
           break;
         }
         activeGames[i].players.map(player => {
           if (player.id === updatedPlayer.id){
-            console.log("ORIGINAL:", player);
-            console.log("UPDATED:", updatedPlayer);
             return updatedPlayer
           } else {
             return player
