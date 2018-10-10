@@ -58,7 +58,7 @@ class MultiPlayerMaze extends React.Component {
     let game = this.props.game;
 
     this.socket.on(`updatedPlayerGameTick-${this.props.game.id}`, (p) => {
-      updatePlayer(p);
+      abilityHandler(updatePlayer(p));
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
@@ -75,6 +75,7 @@ class MultiPlayerMaze extends React.Component {
           oldplayer.update = p.update;
           oldplayer.use_ability = p.use_ability;
           oldplayer.username = p.username;
+          return oldplayer;
         }
       }
     }
