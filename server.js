@@ -127,7 +127,7 @@ io.on('connection', (socket) => {
             return player
           }
         });
-        io.sockets.emit(`updatedPlayerGameTick-${game.id}`, updatedPlayer);
+        io.sockets.emit(`updatedPlayerGameTick-${activeGames[i].id}`, updatedPlayer);
         break
       }
     }

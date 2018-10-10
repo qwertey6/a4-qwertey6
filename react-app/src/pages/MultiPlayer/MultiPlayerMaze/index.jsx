@@ -41,7 +41,6 @@ class MultiPlayerMaze extends React.Component {
     const { endpoint } = this.state;
     this.socket = socketIOClient(endpoint);
     this.socket.on(`mazeWinner-${this.props.game.id}`, (results) => {
-      console.log(results);
       this.setState({ winner: results })
     });
     this.playableMazeScript()
