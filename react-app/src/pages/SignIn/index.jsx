@@ -36,6 +36,7 @@ class Home extends React.Component {
           ref={avatar}
           onClick={() => this.setAvatar(avatar)}
           src={require(`../../pictures/avatars/${avatar}.svg`)}
+          alt={avatar}
         />
       )
     };
@@ -47,6 +48,7 @@ class Home extends React.Component {
           ref={ability}
           onClick={() => this.setAbility(ability)}
           src={require(`../../pictures/abilities/${ability}.svg`)}
+          alt={ability}
         />
       )
     };
@@ -66,7 +68,7 @@ class Home extends React.Component {
         <h2>Choose your power ability</h2>
         <div id="power-ability">
           {makeAbilityImage("dig")}
-          {makeAbilityImage("invisibility")}
+          {makeAbilityImage("slime")}
         </div>
         {rootState.username != null && rootState.avatar != null && rootState.powerAbility != null
           ?

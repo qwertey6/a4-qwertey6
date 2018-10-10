@@ -50,6 +50,7 @@ server.get('*', (req,res) =>{
 
 /**********************LOBBIES***************************/
 let mazeLobbies = {}; // Key = mazeID, Value = list of player objects that are in that maze's lobby
+let activeGames = []; // List of game objects
 io.on('connection', (socket) => {
   socket.on("playerJoinedLobby", (data) => {
     const mazeID = data.mazeID;
@@ -66,23 +67,70 @@ io.on('connection', (socket) => {
   socket.on('playerLeftLobby', (data) => {
     const mazeID = data.mazeID;
     const player = data.player;
-    mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1)
+    mazeLobbies[mazeID].splice(mazeLobbies[mazeID].indexOf(player), 1);
     io.sockets.emit("mazeLobbies", mazeLobbies);
-  })
+  });
   socket.on('playerStartedGame', (maze) => {
     console.log("Player started game!");
-    io.sockets.emit('gameStart', {maze: maze, players: mazeLobbies[maze.id]})
-    mazeLobbies[maze.id] = [] // Clear the lobby for this maze
+    const players = [];
+    mazeLobbies[maze.id].forEach(player => {
+      player.x = 0;
+      player.y = 0;
+      player.dx = 0;
+      player.dy = 0;
+      player.update = false;
+      player.use_ability = false;
+      player.tail = [];
+      players.push(player)
+    });
+    const game = {
+      maze: maze,
+      players: players,
+      id: Date.now().toString(36),
+      start: Math.floor(new Date() / 1000)
+    };
+    activeGames.push(game);
+    io.sockets.emit(`gameStart-${maze.id}`, game);
+    mazeLobbies[maze.id] = []; // Clear the lobby for this maze
     io.sockets.emit("mazeLobbies", mazeLobbies);
-  })
+  });
+  socket.on('playerMove', (game, updatedPlayer) => {
+    console.log("PLAYER MOVED");
+    for (let i = 0; i < activeGames.length; i++){
+      if (activeGames[i].id === game.id){
+        if (updatedPlayer.x === 15 && updatedPlayer.y === 15){
+          activeGames.splice(i, 1); // Remove the game from the list of active games
+          const time = Math.floor(new Date() / 1000) - game.start;
+          const results = {
+            time: time,
+            player: updatedPlayer
+          };
+          io.sockets.emit(`mazeWinner-${game.id}`, results);
+          if (time < game.maze.high_score){
+            db.run(`UPDATE 'mazes' SET high_score="${time}" WHERE id="${game.maze.id}"`, [], (err, row) => {})
+          }
+          break;
+        }
+        activeGames[i].players.map(player => {
+          if (player.id === updatedPlayer.id){
+            console.log("ORIGINAL:", player);
+            console.log("UPDATED:", updatedPlayer);
+            return updatedPlayer
+          } else {
+            return player
+          }
+        });
+        io.sockets.emit(`gameTick-${game.id}`, activeGames[i]);
+        break
+      }
+    }
+  });
+  // Needed for one case where the client needs to get just the maze lobbies
   socket.on('pingMazeLobbies', () => {
     io.sockets.emit("mazeLobbies", mazeLobbies);
   })
 });
 
-setInterval(function() {
-  // Can emit to sockets here on an interval
-}, 1000 / 60);
 /********************END LOBBIES*************************/
 
 http.listen(process.env.PORT || port, () => {

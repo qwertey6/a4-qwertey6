@@ -45,11 +45,17 @@ class MazeLobby extends React.Component {
         }
       }
     });
-    this.socket.on("gameStart", game => {
-      console.log(game);
-      if (parseInt(game.maze.id) === this.props.maze.id) {
-        this.props.parentState.setState({ currentGame: game })
-      }
+    this.socket.on(`gameStart-${this.props.maze.id}`, game => {
+      document.getElementById('maze-lobby').innerHTML = "<h1>3</h1>";
+      setTimeout(() => {
+        document.getElementById('maze-lobby').innerHTML = "<h1>2</h1>";
+        setTimeout(() => {
+          document.getElementById('maze-lobby').innerHTML = "<h1>1</h1>";
+          setTimeout(() => {
+            this.props.parentState.setState({ currentGame: game })
+          }, 1000);
+        }, 1000);
+      }, 1000);
     })
   }
 
