@@ -1,0 +1,19 @@
+#maze-lobbys-to-join {
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+}
+
+#selector, #selected-maze-svg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#lobbies {
+    margin: 0 10px;
+    display: block;
+    height: 400px;
+    overflow: auto;
+}

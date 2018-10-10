@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from "d3";
 import axios from 'axios';
+import { NotificationManager } from 'react-notifications';
 
 class SinglePlayerMaze extends React.Component {
 	constructor(props){
@@ -165,7 +166,7 @@ class SinglePlayerMaze extends React.Component {
 										.attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
 										.duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
 								if(curtile.datum().x == 15 && curtile.datum().y == 15){
-									alert("Winrar is you!")
+                  NotificationManager.success('You beat the maze!')
 								}
 								update_pos = true;
 								break;

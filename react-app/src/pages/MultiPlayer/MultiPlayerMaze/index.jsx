@@ -59,6 +59,7 @@ class MultiPlayerMaze extends React.Component {
     let game = this.props.game;
     this.socket.on(`gameTick-${this.props.game.id}`, (g) => {
       game = g;
+      g.players.forEach(updatePlayer);
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
@@ -66,6 +67,20 @@ class MultiPlayerMaze extends React.Component {
     const SLIME_MAX_LENGTH = 5;
     const SLIME_PENALTY = 300;//make moves take longer if the player is on a slime tile
     const PLAYER_MOVE_SPEED = 200;//200ms per move
+
+    function updatePlayer(p){
+      for(let oldplayer of players){
+        if(oldplayer.id == p.id){
+          oldplayer.dx = p.dx;
+          oldplayer.dy = p.dy;
+          oldplayer.update = p.update;
+          oldplayer.use_ability = p.use_ability;
+          oldplayer.username = p.username;
+        }
+      }
+    }
+
+
     /* An ability's type is one of:
       dig
       *slime
@@ -104,7 +119,7 @@ class MultiPlayerMaze extends React.Component {
               p.trail = p.trail.slice(1);
             }
 
-            let pslime = slimes.selectAll("rect").filter(".p"+players.indexOf(player))
+            let pslime = slimes.selectAll("rect").filter(".p"+p.id)
               .data(p.trail);
 
             pslime.attr("x", function(d){return (d.x * w + w/4) +"%";})
@@ -112,7 +127,7 @@ class MultiPlayerMaze extends React.Component {
 
             pslime.enter()
               .append("rect")
-              .attr("class", "p" + players.indexOf(p))
+              .attr("class", "p" + p.id)
               .attr("width" , w/2 + "%")
               .attr("height", h/2 + "%")
               .attr("x", function(d){return (d.x * w + w/4) +"%";})
@@ -168,61 +183,60 @@ class MultiPlayerMaze extends React.Component {
 
     //Tile states: B=unnavigable W=navigable F=already navigated
     function playerHandler(){
-      return function(){
-        for (let p of players){ //this function iterates over all players and updates them if they need updating
-          if(!p.update){continue;}//only update the player if the player has performed an action
-          p.update = false;//then mark that we have handled this action
-          let update_pos = false;//whether to update the player position at the end of this turn.
-          if(p.ability == "dig" || p.ability == "slime"){p.use_ability = true;}//if the player's ability is digging or sliming, then try to dig/slime at every step
-          let curtile = getTile(p.x + p.dx, p.y+p.dy);
-          let prevtile = getTile(p.x, p.y);
-          let slimed = isSlimed(p.x, p.y) || isSlimed(p.x + p.dx, p.y + p.dy);
+      for (let p of players){ //this function iterates over all players and updates them if they need updating
+        if(!p.update){continue;}//only update the player if the player has performed an action
+        p.update = false;//then mark that we have handled this action
+        let update_pos = false;//whether to update the player position at the end of this turn.
+        if(p.ability == "dig" || p.ability == "slime"){p.use_ability = true;}//if the player's ability is digging or sliming, then try to dig/slime at every step
+        let curtile = getTile(p.x + p.dx, p.y+p.dy);
+        let prevtile = getTile(p.x, p.y);
+        let slimed = isSlimed(p.x, p.y) || isSlimed(p.x + p.dx, p.y + p.dy);
 
-          if(curtile){
-            switch(curtile.attr("class")){
-              //Do not do anything if the current tile's state is unnavigable
-              case "B":
-                update_pos = false;
-                break;
+        if(curtile){
+          switch(curtile.attr("class")){
+            //Do not do anything if the current tile's state is unnavigable
+            case "B":
+              update_pos = false;
+              break;
 
-              //If we are moving back a tile, unmark/unnavigate the previous tile
-              case "F":
-                d3player.transition() // TODO :: USE THE p.icon ATTRIBUTE OF OUR PLAYER!!!
-                  .attr("cx", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
-                  .attr("cy", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
-                  .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
-                prevtile.attr("class", prevtile.attr("class").replace("F","W"));
-                update_pos = true;
-                break;
+            //If we are moving back a tile, unmark/unnavigate the previous tile
+            case "F":
+              d3players.select("."+p.id).transition() // TODO :: USE THE p.icon ATTRIBUTE OF OUR PLAYER!!!
+                .attr("x", randbetween(curtile.datum().x*w, (curtile.datum().x+1)*w)+"%")
+                .attr("y", randbetween(curtile.datum().y*h, (curtile.datum().y+1)*h)+"%")
+                .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
+              prevtile.attr("class", prevtile.attr("class").replace("F","W"));
+              update_pos = true;
+              break;
 
-              //If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
-              case "W":
-                curtile.attr("class", curtile.attr("class").replace("W","F"));
-                d3player.transition()
-                  .attr("cx", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
-                  .attr("cy", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
-                  .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
-                if(curtile.datum().x == 15 && curtile.datum().y == 15){
-                  // alert("Winrar is you!")
-                }
-                update_pos = true;
-                break;
-              default:
-                console.log("UNKNOWN TILE TYPE/CLASS - MUST BE ONE OF 'B'/'W'/'F'");
-                break;
-            }
-          }
-          //console.log(player);
-          abilityHandler(p);
-          if(update_pos){
-            p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
-            p.dx = 0;
-            p.y += player.dy;
-            p.dy = 0;
-          }
+            //If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
+            case "W":
+              curtile.attr("class", curtile.attr("class").replace("W","F"));
+              d3players.select("."+p.id).transition()
+                .attr("x", randbetween(curtile.datum().x * w, (curtile.datum().x+1)*w)+"%")
+                .attr("y", randbetween(curtile.datum().y * h, (curtile.datum().y+1)*h)+"%")
+                .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
+              if(curtile.datum().x == 15 && curtile.datum().y == 15){
+                // alert("Winrar is you!")
+              }
+              update_pos = true;
+              break;
+            default:
+              console.log("UNKNOWN TILE TYPE/CLASS - MUST BE ONE OF 'B'/'W'/'F'");
+              break;
+          } 
+        }
+        //console.log(player);
+        abilityHandler(p);
+        if(update_pos){
+          p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
+          p.dx = 0;
+          p.y += player.dy;
+          p.dy = 0;
         }
       }
     }
+    
 
     var width  = 100;
     var height = 100;
@@ -232,10 +246,19 @@ class MultiPlayerMaze extends React.Component {
     //M var menu = d3.select("svg");
 
     var board = d3.select("svg").append("g").attr("class","board");
-    var handler = playerHandler();//MazeNavigationHandler();//set 1 handler to handle all mouse over events
-    var d3player = d3.select("svg").append("circle"); //we append the player here, so that the player is always above the board
+    var handler = playerHandler;//MazeNavigationHandler();//set 1 handler to handle all mouse over events
+    var d3players = d3.select("svg").append("g").attr("class", "players"); //we append the players group here, so that the player is always above the board
     var slimes = d3.select("svg").append("g").attr("class","slime");
     var players = game.players;
+
+    for(let p of players){
+      d3players.append("svg:image")
+        .attr("class", p.id)
+        .attr("xlink:href", p.icon)
+        .attr("width", w/2 + "%")
+        .attr("height", h/2 + "%");
+    }
+
     let player = null;
     players.forEach(p => {
       if (p.id === this.props.player.id){
@@ -243,12 +266,24 @@ class MultiPlayerMaze extends React.Component {
       }
     });
 
-    d3player.attr("fill", "red")
+    /*d3player.attr("fill", "red")
       .attr("r", width/16/2)
       .attr("cx", w/2+"%")
       .attr("cy", h/2+"%");
-
+  */
     player.icon = require(`../../../pictures/avatars/${player.avatar}.svg`);//set the player's icon to the d3player node
+    //console.log(player.icon);
+    // function loadPlayer(p){
+    //   d3.xml(p.icon, function(error, xml){
+    //       console.log("AWDAWDAWD");
+    //       console.log(error);
+    //       console.log("XML:",xml);
+    //       var importedNode = document.importNode(xml.documentElement, true);
+    //       d3players.append(importedNode);
+    //   });
+    // }
+    //loadPlayer(player);
+    //console.log(player.icon);
 
     var data = game.maze;
 
@@ -310,6 +345,7 @@ class MultiPlayerMaze extends React.Component {
         //after updating our player object, we can call the movement handler on it.
       })
     function transmit(p){
+      let netplayer = {};
       _this.socket.emit('playerMove', _this.props.game, p)
     }
   }

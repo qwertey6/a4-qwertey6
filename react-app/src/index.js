@@ -5,6 +5,9 @@ import SinglePlayer from "./pages/SinglePlayer";
 import MultiPlayer from "./pages/MultiPlayer";
 import MazeManager from "./pages/MazeManager";
 import SignIn from './pages/SignIn'
+import ReactTooltip from 'react-tooltip'
+import { NotificationContainer } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import './app.css'
 
 class App extends React.Component {
@@ -28,6 +31,8 @@ class App extends React.Component {
     return (
       <Router>
         <div id="app">
+          <NotificationContainer />
+          <ReactTooltip place="bottom" type="success" effect="float"/>
           <Link to="/" id="home-button"><img id="home-icon" src={require('./home-icon.png')} /></Link>
           <h1 id="title">MAZE CRAZE</h1>
           <Switch>
