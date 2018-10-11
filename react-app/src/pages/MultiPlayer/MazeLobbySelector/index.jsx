@@ -35,7 +35,7 @@ class MazeLobbySelector extends React.Component {
     if (this.state.mazes.length > 0){
       this.state.mazes.forEach( maze => {
         mazeButtons.push(
-          <tr key={maze.id} onClick={() => this.setState({ selectedMaze: maze })}>
+          <tr key={maze.id} onClick={() => this.setState({ selectedMaze: maze })} className={this.state.selectedMaze != null && this.state.selectedMaze.id === maze.id ? "selected" : ""}>
             <td>{maze.name}</td>
             <td id={`${maze.id}_lobbySize`}>0</td>
             <td>{maze.high_score == null ? "N/A" : `${Math.trunc(maze.high_score / 1000)}.${maze.high_score % 1000}s`}</td>
