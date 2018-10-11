@@ -26,10 +26,15 @@ class MultiPlayerMaze extends React.Component {
     } else {
       return (
         <div id="multi-player-maze" >
-          <h2>{this.state.winner.player.username} won in {this.state.winner.time}</h2>
-          {this.props.game.maze.high_score > this.state.winner.time
-            ? <h2>{this.state.winner.player.username} beat the high score of {this.prettyPrintTime(this.props.game.maze.high_score)} with a time of {this.prettyPrintTime(this.state.winner.time)}</h2>
-            : null
+          {this.state.winner.player.id === this.props.player.id
+            ? [
+              <h2>YOU WON</h2>,
+              (this.props.game.maze.high_score > this.state.winner.time
+                  ? <h2>You beat the high score of {this.prettyPrintTime(this.props.game.maze.high_score)} with a time of {this.prettyPrintTime(this.state.winner.time)}!</h2>
+                  : null
+              )
+              ]
+            : <h2>YOU LOST</h2>
           }
           <button onClick={() => this.leaveGame()}>Return to lobby</button>
         </div>
