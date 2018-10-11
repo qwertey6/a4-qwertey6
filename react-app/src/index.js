@@ -34,7 +34,7 @@ class App extends React.Component {
           <NotificationContainer />
           <ReactTooltip place="bottom" type="success" effect="float"/>
           <Link to="/" id="home-button"><img id="home-icon" src={require('./home-icon.png')} /></Link>
-          <h1 id="title">MAZE CRAZE</h1>
+          <object id="title" data={require("./MAZECRAZE.svg")}></object>
           <Switch>
             <Route exact path="/" render={(props) => <SignIn {...props} rootState={this} />} />
             <Route path="/maze-manager" component={MazeManager} />
