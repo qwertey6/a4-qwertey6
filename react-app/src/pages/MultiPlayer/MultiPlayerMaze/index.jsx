@@ -73,6 +73,8 @@ class MultiPlayerMaze extends React.Component {
     function updatePlayer(p){
       for(let oldplayer of players){
         if(oldplayer.id == p.id){
+          oldplayer.x = p.x;
+          oldplayer.y = p.y;
           oldplayer.dx = p.dx;
           oldplayer.dy = p.dy;
           oldplayer.update = p.update;

@@ -14,7 +14,6 @@ class MazeLobby extends React.Component {
   }
 
   render() {
-    console.log(this.state.lobby)
     return (
       <div id="maze-lobby">
         <h2><b>Number of players in the lobby:{this.state.lobby.length}</b></h2>
