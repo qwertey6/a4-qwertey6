@@ -238,8 +238,17 @@ class MultiPlayerMaze extends React.Component {
           p.isMoving = true;
           pview.transition()
             .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed)
-            .attr("x", randbetween(curtile.datum().x * w + pw/2, (curtile.datum().x+1)*w - pw/2)+"%")
-            .attr("y", randbetween(curtile.datum().y * h + ph/2, (curtile.datum().y+1)*h - ph/2)+"%")
+            //.attr("x", randbetween(curtile.datum().x * w + pw/2, (curtile.datum().x+1)*w - pw/2)+"%")
+            //.attr("y", randbetween(curtile.datum().y * h + ph/2, (curtile.datum().y+1)*h - ph/2)+"%")
+            .attr("transform", function(d){
+                const me = pview.node().getBBox();
+                const svgbox = svg.node().getBBox();
+                const x1 = me.x + me.width/2;//the center x about which you want to rotate
+                const y1 = me.y + me.height/2;//the center y about which you want to rotate
+                return `translate(${randbetween(curtile.datum().x * svgbox.width/16  +  svgbox.width*pw/100, (curtile.datum().x+1)* svgbox.width/16 -  svgbox.width* pw/100)},
+                                  ${randbetween(curtile.datum().y * svgbox.height/16 + svgbox.height*ph/100, (curtile.datum().y+1)*svgbox.height/16 - svgbox.height* ph/100)}
+                                  )rotate(${randbetween(0,360)}, ${x1}, ${y1})`;//rotate 180 degrees about x and y
+              })
             .on("end", function(d){p.isMoving = false;});
 
           p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
@@ -257,7 +266,7 @@ class MultiPlayerMaze extends React.Component {
     var w = width/16;
 
     //M var menu = d3.select("svg");
-
+    var svg = d3.select("svg")
     var board = d3.select("svg").append("g").attr("class","board");
     var handler = playerHandler;//MazeNavigationHandler();//set 1 handler to handle all mouse over events
     var d3players = d3.select("svg").append("g").attr("class", "players"); //we append the players group here, so that the player is always above the board
