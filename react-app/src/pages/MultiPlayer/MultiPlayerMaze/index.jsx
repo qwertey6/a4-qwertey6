@@ -66,9 +66,11 @@ class MultiPlayerMaze extends React.Component {
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
     */
-    const SLIME_MAX_LENGTH = 5;
-    const SLIME_PENALTY = 300;//make moves take longer if the player is on a slime tile
+    const SLIME_MAX_LENGTH = 5;//the max length of a slime tile
+    const SLIME_PENALTY = 200;//make moves take longer if the player is on a slime tile
     const PLAYER_MOVE_SPEED = 200;//200ms per move
+    const DIG_HITS_TO_BREAK_BLOCK = 6;//# hits to break a maze tile
+    const DIG_DAMAGE = 1/6;
 
     function updatePlayer(p){
       for(let oldplayer of players){
@@ -105,7 +107,7 @@ class MultiPlayerMaze extends React.Component {
             if(!digTile.node().className.baseVal.includes("B")){return;}//if we have not selected any tile, then the player is likely trying to dig out of the maze, so exit
 
             let updated_digTileDatum = digTile.datum();
-            updated_digTileDatum.health -= 0.31;
+            updated_digTileDatum.health -= DIG_DAMAGE;
             if(updated_digTileDatum.health <= 0.1){
               digTile.attr("opacity", 1)
                 .attr("class", digTile.attr("class").replace("B", "W"));
@@ -190,6 +192,7 @@ class MultiPlayerMaze extends React.Component {
     function playerHandler(){
       for (let p of players){ //this function iterates over all players and updates them if they need updating
         if(!p.update){continue;}//only update the player if the player has performed an action
+        if(p.isMoving){console.log("not moving!");continue;}//skip this player's turn if the player is still moving from before
         p.update = false;//then mark that we have handled this action
         let update_pos = false;//whether to update the player position at the end of this turn.
         if(p.ability == "dig" || p.ability == "slime"){p.use_ability = true;}//if the player's ability is digging or sliming, then try to dig/slime at every step
@@ -210,13 +213,13 @@ class MultiPlayerMaze extends React.Component {
 
             //If we are moving back a tile, unmark/unnavigate the previous tile
             case "F":
-              prevtile.attr("class", prevtile.attr("class").replace("F","W"));
+              //prevtile.attr("class", prevtile.attr("class").replace("F","W"));
               update_pos = true;
               break;
 
             //If we are moving into a new, unnavigated tile, then set the previous tile to the new tile and navigate to it.
             case "W":
-              curtile.attr("class", curtile.attr("class").replace("W","F"));
+              //curtile.attr("class", curtile.attr("class").replace("W","F"));
               update_pos = true;
               break;
             default:
@@ -227,10 +230,12 @@ class MultiPlayerMaze extends React.Component {
         //console.log(player);
         abilityHandler(p);
         if(update_pos){
+          p.isMoving = true;
           pview.transition()
+            .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed)
             .attr("x", randbetween(curtile.datum().x * w + pw/2, (curtile.datum().x+1)*w - pw/2)+"%")
             .attr("y", randbetween(curtile.datum().y * h + ph/2, (curtile.datum().y+1)*h - ph/2)+"%")
-            .duration(PLAYER_MOVE_SPEED + SLIME_PENALTY*slimed);
+            .on("end", function(d){p.isMoving = false;});
 
           p.x += player.dx;//finish the move by updating the player's location/movement states for the next turn IFF the player made a valid move
           p.dx = 0;
