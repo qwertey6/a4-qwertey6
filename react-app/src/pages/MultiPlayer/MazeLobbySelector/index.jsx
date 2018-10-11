@@ -38,14 +38,14 @@ class MazeLobbySelector extends React.Component {
           <tr key={maze.id} onClick={() => this.setState({ selectedMaze: maze })}>
             <td>{maze.name}</td>
             <td id={`${maze.id}_lobbySize`}>0</td>
-            <td>{maze.high_score == null ? "N/A" : maze.high_score}</td>
+            <td>{maze.high_score == null ? "N/A" : `${Math.trunc(maze.high_score / 1000)}.${maze.high_score % 1000}s`}</td>
           </tr>
         )
       });
     }
     return (
       <table id="lobbies">
-        <thead><tr><th>Name</th><th># Players waiting in Lobby</th><th>High Score</th></tr></thead>
+        <thead><tr><th>Name</th><th># Players in Lobby</th><th>High Score</th></tr></thead>
         <tbody>{mazeButtons}</tbody>
       </table>
     )

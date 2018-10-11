@@ -11,15 +11,15 @@ class MultiPlayerMaze extends React.Component {
     };
   }
 
+  prettyPrintTime(time){
+    return `${Math.trunc(time / 1000)}.${time % 1000}s`
+  }
+
   render() {
     console.log(this.props.game);
     if (this.state.winner == null) {
       return (
         <div id="multi-player-maze" >
-          <div id="hud">
-            <h2>Maze: {this.props.game.maze.name}</h2>
-            <h2>Number of players: {this.props.game.players.length}</h2>
-          </div>
           <svg id={this.props.game.maze.id} className="PlayableMaze" width="100%" height="100%" ></svg>
         </div>
       )
@@ -28,7 +28,7 @@ class MultiPlayerMaze extends React.Component {
         <div id="multi-player-maze" >
           <h2>{this.state.winner.player.username} won in {this.state.winner.time}</h2>
           {this.props.game.maze.high_score > this.state.winner.time
-            ? <h2>{this.state.winner.player.username} beat the high score of {this.props.game.maze.high_score} with a time of {this.state.winner.time}</h2>
+            ? <h2>{this.state.winner.player.username} beat the high score of {this.prettyPrintTime(this.props.game.maze.high_score)} with a time of {this.prettyPrintTime(this.state.winner.time)}</h2>
             : null
           }
           <button onClick={() => this.leaveGame()}>Return to lobby</button>
@@ -58,7 +58,10 @@ class MultiPlayerMaze extends React.Component {
     let game = this.props.game;
 
     this.socket.on(`updatedPlayerGameTick-${this.props.game.id}`, (p) => {
-      abilityHandler(updatePlayer(p));
+      if (p.id !== this.props.player.id){
+        abilityHandler(updatePlayer(p));
+        playerHandler();
+      }
     });
 
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
