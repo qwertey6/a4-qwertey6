@@ -26,6 +26,8 @@ Race against eachother, and try to beat the maze's high score!
 - **Tech Achievement 1**: Our node server and react client both use socket.io to communicate with eachother.
 The client can reach out to the server, and the server can reach out to the client withouth needed to make an http request.
 This is the core technology that made multiplayer possible.
+- **Tech Achievement 2**: The front end uses various chained methods of timing the player turns, and is easily modifiable to balance the game
+- **Tech Achievement 3**: The front end allows players to pick their own icon, using nested SVG's and css translate(..)rotate(..)s to calculate positioning
 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: The react app uses the react-notifications module to present
