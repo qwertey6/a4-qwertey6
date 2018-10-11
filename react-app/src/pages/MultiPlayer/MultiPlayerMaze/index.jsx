@@ -67,8 +67,8 @@ class MultiPlayerMaze extends React.Component {
     /*THE GAME PROCEEDS IN STEPS: MOVE, ABILITY, REPEAT
     */
     const SLIME_MAX_LENGTH = 5;//the max length of a slime tile
-    const SLIME_PENALTY = 200;//make moves take longer if the player is on a slime tile
-    const PLAYER_MOVE_SPEED = 200;//200ms per move
+    const SLIME_PENALTY = 100;//make moves take longer if the player is on a slime tile
+    const PLAYER_MOVE_SPEED = 130;//ms per move
     const DIG_HITS_TO_BREAK_BLOCK = 6;//# hits to break a maze tile
     const DIG_DAMAGE = 1/6;
 
