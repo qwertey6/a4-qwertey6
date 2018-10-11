@@ -133,6 +133,10 @@ io.on('connection', (socket) => {
       }
     }
   });
+  socket.on('clearLobby', (mazeID) => {
+    mazeLobbies[mazeID] = [];
+    io.sockets.emit("mazeLobbies", mazeLobbies);
+  });
   // Needed for one case where the client needs to get just the maze lobbies
   socket.on('pingMazeLobbies', () => {
     io.sockets.emit("mazeLobbies", mazeLobbies);

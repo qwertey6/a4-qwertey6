@@ -27,6 +27,8 @@ class MazeLobbySelector extends React.Component {
   componentDidUpdate(){
     if (this.state.selectedMaze != null){
       this.viewSelectedMaze()
+    } else {
+      this.componentDidMount()
     }
   }
 

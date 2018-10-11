@@ -18,16 +18,21 @@ class MazeLobby extends React.Component {
       <div id="maze-lobby">
         <h2><b>Number of players in the lobby:{this.state.lobby.length}</b></h2>
         {this.state.firstPlayer && this.state.lobby.length > 0 // TODO ::: CHANGE THIS LINE WHEN WE RELEASE THE GAME!!!
-          ? <button onClick={() => this.startGame()} className="green">Start Game</button>
+          ? <div id={"side-by-side"}>
+              <button onClick={() => this.startGame()} className="green">Start Game</button>
+            <button onClick={() => this.leaveLobby()} className="red">Leave Lobby</button>
+          </div>
           : [
             <ReactLoading type={"spin"} color={"#4CAF50"} height={'20%'} width={'20%'} />,
             (this.state.firstPlayer
                 ? <h2>Waiting for more players</h2>
                 : <h2>Waiting until the first player starts the game...</h2>
-            )
+            ),
+            <button onClick={() => this.leaveLobby()} className="red">Leave Lobby</button>
           ]
         }
-        <button onClick={() => this.leaveLobby()} className="red">Leave Lobby</button>
+        <p>Ghost player in lobby?</p>
+        <button onClick={() => this.clearLobby()} className="yellow ghost">Clear lobby</button>
       </div>
     );
   }
@@ -63,20 +68,26 @@ class MazeLobby extends React.Component {
           }, 1000);
         }, 1000);
       }, 1000);
-    })
+    });
   }
 
   componentWillUnmount() {
+    this.leaveLobby();
     this.socket.close()
   }
 
   leaveLobby() {
-    this.props.parentState.setState({ currentLobby: null })
     this.socket.emit('playerLeftLobby', { mazeID: this.props.maze.id, player: this.props.player });
+    this.props.parentState.setState({ currentLobby: null });
   }
 
   startGame() {
     this.socket.emit('playerStartedGame', this.props.maze)
+  }
+
+  clearLobby(){
+    this.socket.emit('clearLobby', this.props.maze.id);
+    this.props.parentState.setState({ currentLobby: null });
   }
 }
 
